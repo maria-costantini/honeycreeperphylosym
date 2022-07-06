@@ -1,0 +1,1557 @@
+---
+title: "Phylosymbiosis_16S"
+author: "Maria Costantini"
+date: "7/19/2021"
+output: html_document
+---
+
+```{r global options, results="hide", warning=FALSE, message=FALSE}
+if (!require('knitr')) install.packages('knitr'); library('knitr')
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, fig.align='center')
+knitr::opts_knit$set(root.dir = "~/Documents/PhDData")
+# Load in packages
+if (!requireNamespace("devtools", quietly = TRUE)){install.packages("devtools")}
+devtools::install_github("jbisanz/qiime2R")
+library(qiime2R)
+install.packages("ape")
+library(ape)
+library(vegan)
+library(Biostrings)
+library(biomformat)
+library(phyloseq)
+library(Hmisc)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(stats)
+library(utils)
+library(plyr)
+library(car)
+library(MASS)
+library(data.table)
+```
+
+###Load in data
+
+```{r}
+ASVs <- read_qza("table_16S-paired2.qza")
+meta <- read.csv("groupmeta.csv", header = TRUE)
+#names(meta)[names(meta) == "sample.id"] <- "sampleID"
+taxa <- read_qza("16S_silva_taxonomy.qza")
+tree = import_qiime(treefilename = "16Srootedtree.nwk")
+head(taxa$data) #seeing if it loaded properly
+```
+
+###Create Phyloseq Object
+```{r}
+physeq16s <- qza_to_phyloseq(
+  features = "table_16S-paired2.qza",
+  tree = "16Srooted-tree.qza", "16S_silva_taxonomy.qza",
+  metadata = "PhyloMetadata2.txt"
+)
+physeq16s = prune_samples(sample_sums(physeq16s)>=10, physeq16s)
+otu_table <- as(otu_table(physeq16s), "matrix")
+```
+
+###host tree3##
+
+```{r}
+hosttree <- read.nexus("NucleAlignConsesus2.newick")
+PatristicDistMatrix<-cophenetic(hosttree)
+```
+
+
+###Loading in data from exported files
+
+```{r}
+#read in otu table
+otu <- read.table(file = "otu_table16S.txt", header = TRUE, sep = '\t', fill = T, check.names = FALSE)
+head(otu)
+
+#read in taxonomy 
+tax <- read.table(file = "taxonomy.tsv", sep = '\t', header = TRUE)
+head(tax)
+merged_file <- merge(otu, tax, by.x = c("OTU"), by.y = c("Feature.ID"))
+write.table(merged_file, file = "combined_otu_tax.tsv", sep = "\t", col.names = TRUE, row.names = FALSE)
+
+rm(merged_file)
+
+
+##import into phyloseq
+otu_table_in <- otu
+rownames(otu_table_in) <- otu_table_in$OTU
+otu_table_in$OTU <- NULL
+otu_table_in <- as.matrix(otu_table_in)
+head(otu_table_in)
+
+rm(otu)
+
+
+#fix taxonomy file and then export
+tax <- as.matrix(read.delim("taxonomy.original.txt", row.names = 1, fill=TRUE, stringsAsFactors = FALSE))
+tax <- gsub("d__","", tax) #to remove unwanted "d_" in taxa names
+tax <- gsub("p__","", tax)
+tax <- gsub("c__","", tax)
+tax <- gsub("o__","", tax)
+tax <- gsub("f__","", tax)
+tax <- gsub("g__","", tax)
+tax <- gsub("s__","", tax)
+write.table(tax, file="taxonomy_edited.tsv", sep = "\t", 
+            col.names = TRUE, row.names = TRUE)
+taxonomy <- read.table("taxonomy_edited.tsv", sep = "\t", header=T,  check.names = FALSE)
+taxonomy <- as.matrix(taxonomy)
+head(taxonomy)
+
+#read in metadata
+metadata <- read.table("PhyloMetadata2.txt", row.names = 1, header=T,
+                       sep = "\t")
+head(metadata)
+
+#read in tree
+phy_tree <- read_tree("16Srootedtree.nwk")
+
+# Import all as phyloseq objects
+OTU <- otu_table(otu_table_in, taxa_are_rows = TRUE)
+TAX <- tax_table(taxonomy)
+META <- sample_data(metadata)
+
+taxa_names(TAX)
+taxa_names(OTU)
+
+taxa_names(phy_tree)
+
+# Same with sample names
+sample_names(OTU)
+sample_names(META)
+head(OTU)
+head(META)
+
+length(colnames(OTU))
+
+#Put it all together in phyloseq object 
+
+ps <- phyloseq(OTU, TAX, META, phy_tree)
+OTU2 <- t(OTU)
+#TAX2 <- t(TAX)
+ps2 <- merge_phyloseq(phyloseq(OTU2, TAX), META, phy_tree) #for bodawatta
+                      
+ps2 #this is normal phyloseq object with actual counts
+
+##distance matrix
+bact_d_bc <- phyloseq::distance(ps2, method='bray')
+plot(hclust(bact_d_bc))
+bact_d_bc <- as.matrix(bact_d_bc)
+
+# check meta data and tax table
+head(sample_data(ps2))
+summary(sample_data(ps2))
+head(tax_table(ps2))
+
+# remove and clean up unnecessary objects
+rm(OTU, TAX, META) 
+rm(otu_table_in, taxonomy, phy_tree)
+
+
+# return some metadata sampleID to a column for easier use later in adonis
+sample_data(ps)$SampleID <- rownames(sample_data(ps))
+```
+
+```{r}
+########################################################
+# Check blank samples
+
+# calculate depth
+metadata <- as.data.frame(sample_data(ps2)) 
+metadata$LibrarySize <- sample_sums(ps2)
+metadata <- metadata[order(metadata$LibrarySize),]
+head(metadata)
+metadata$Index <- seq(nrow(metadata))
+
+meta.mat <- as.matrix(metadata) #so i can look at the lowest library sizes and see if i need to throw any out
+#at least need to throw  out 1661-42996-16S and 1821-21380-16S
+
+# plot library sizes by Sample Type
+ggplot() + 
+  geom_point(data=metadata[metadata$Sample_or_Control == "Sample" ,], 
+             aes(x=Index, y=LibrarySize), size=2.5, color= "lightskyblue") +
+  geom_point(data=metadata[metadata$Sample_or_Control == "Control" ,], 
+             aes(x=Index, y=LibrarySize), size=2.5, color= "darkorange3") +
+  theme_bw() +
+  theme(axis.title.x = element_text(size=16, margin = margin(t = 10)), 
+        axis.title.y = element_text(size=16, margin = margin(r = 10)),
+        axis.text.y  = element_text(size=13, color= "black"), 
+        axis.text.x  = element_text(size=13, color= "black")) +
+  theme(panel.grid.minor   = element_blank(),
+        panel.grid.major.x = element_blank()) +
+  theme(panel.border = element_rect(colour = "grey29")) +
+  theme(legend.title = element_text(size = 16),
+        legend.key.size = unit(0.9, "cm"),
+        legend.text  = element_text(size = 16)) 
+##################################################################################
+# export plot
+setwd("~/Documents/PhDData")
+pdf("scatterplot_library_size_sampleType_v2.pdf", width = 13, height = 5.2) # 
+##################################################################################
+```
+
+Histogram of sequencing depth for each species 
+```{r}
+sdt = data.table(as(sample_data(ps2), "data.frame"),
+                 TotalReads = sample_sums(ps2), keep.rownames = TRUE)
+ps2eqDepth = ggplot(sdt, aes(TotalReads)) +
+  geom_histogram() +
+  ggtitle("Sequencing Depth")
+ps2eqDepth + facet_wrap(~Species)
+```
+
+###decontam##
+
+```{r}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("decontam")
+library(decontam); packageVersion("decontam")
+library(microbiome)
+
+df <- as.data.frame(sample_data(ps))
+df$LibrarySize <- sample_sums(ps)
+df <- df[order(df$LibrarySize),]
+df$Index <- seq(nrow(df))
+ggplot(df, aes(x=Index, y=LibrarySize, color=Sample_or_Control)) + geom_point()
+sample_data(ps)$is.neg <- sample_data(ps)$Sample_or_Control =="Control"
+contamdf.prev <- isContaminant(ps, method="prevalence", neg="is.neg")
+table(contamdf.prev$contaminant)
+head(which(contamdf.prev$contaminant))
+contamdf.prev05 <- isContaminant(ps, method="prevalence", neg="is.neg", threshold=0.5) #moreaggressive, means it will identify as contaminants all sequences that are more prevalent in negative controls than in positive samples
+table(contamdf.prev05$contaminant)
+
+ps.pa <- transform_sample_counts(ps, function(abund) 1*(abund>0))
+ps.pa.neg <- prune_samples(sample_data(ps.pa)$Sample_or_Control == "Control", ps.pa)
+ps.pa.pos <- prune_samples(sample_data(ps.pa)$Sample_or_Control == "Sample", ps.pa)
+df.pa <- data.frame(pa.pos=taxa_sums(ps.pa.pos), pa.neg=taxa_sums(ps.pa.neg),
+                      contaminant=contamdf.prev$contaminant)
+ggplot(data=df.pa, aes(x=pa.neg, y=pa.pos, color=contaminant)) + geom_point() +
+  xlab("Prevalence (Negative Controls)") + ylab("Prevalence (True Samples)")
+contams <- which(contamdf.prev05$contaminant) #remove these from data?
+#813 1241
+which(sample_sums(ps) < 1000)
+which(sample_sums(ps) < 1)
+ps.pa.neg
+prune_taxa(taxa_sums(ps.pa.neg) > 0, ps.pa.neg)
+prune_taxa(taxa_sums(ps.pa.pos) > 0, ps.pa.pos)
+
+#filter out contaminants 
+ps.nocontam <- prune_taxa(!contamdf.prev05$contaminant, ps)
+ps.nocontam
+
+# then remove blank samples + OTUs with 0 remaining reads
+ps.sample <- prune_samples(sample_data(ps.nocontam)$Sample_or_Control == "Sample", ps.nocontam)
+ps.sample <- prune_taxa(taxa_sums(ps.sample) > 0, ps.sample)
+ps.sample
+
+rm(ps.pa, ps.pa.neg, ps.pa.pos)
+rm(contamdf.prev, contamdf.prev05)
+
+# Just checking which SAMPLES are likely to be removed later based on low nr of reads
+table(sample_sums(ps.sample) < 1000)
+which(sample_sums(ps.sample) < 1000)
+which(sample_sums(ps.sample) < 500)
+#1661-42996=16S and 1821-21380-16S
+
+##############################################
+# REMOVE SPECIFIC OTUs 
+# Likely host or food contaminants
+head(tax_table(ps.sample))
+ps.sample <- subset_taxa(ps.sample, Family!= " Mitochondria") #metadata must have had extra space, had to delete to make work
+ps.sample <- subset_taxa(ps.sample, Order!= " Chloroplast")
+ps.sample <- subset_taxa(ps.sample, Kingdom!= "Archaea")
+ps.sample <- subset_taxa(ps.sample, Kingdom!= "Eukaryota")
+
+ps.sample <- subset_taxa(ps.sample, Kingdom!= "Unassigned")
+ps.sample <- subset_taxa(ps.sample, Genus!= " Mitochondria")
+ps.sample <- subset_samples(ps.sample, Abbreviation != "KAEL")
+ps.sample <- subset_samples(ps.sample, Abbreviation != "PUAI")
+
+table(taxa_sums(ps.sample) < 1)
+
+# prune on prevalence - using fast_melt function from above
+install.packages("remotes")
+remotes::install_github("alexpiper/seqateurs")
+library(seqateurs)
+
+mdt <- fast_melt(ps.sample)
+prevdt <- mdt[, list(Prevalence = sum(count > 0), 
+                    TotalCounts = sum(count)), by = taxaID]
+head(prevdt, 10)
+
+#prevalence equals how many samples the otu is present in
+#count equals how many times that otu shows up in a given sample
+#total count equals how many times an otu shows up in all samples
+hist(prevdt$Prevalence, breaks=30)
+hist(prevdt$Prevalence, xlim = c(0,10))
+
+ps.sample
+ps.sample.3 <- prune_taxa(prevdt[(Prevalence >= 3 ), taxaID], ps.sample)
+ps.sample.5 <- prune_taxa(prevdt[(Prevalence >= 5 ), taxaID], ps.sample)
+ps.sample.3
+ps.sample.5
+
+#filtering using above code seems very agrresive. I am going to go forward by just removing singletons, aka TotalCounts >1
+
+##### prune / filter samples based on singletons / total counts ######
+# total counts
+library("data.table"); packageVersion("data.table")
+tdt <- data.table(tax_table(ps.sample),  
+                  TotalCounts = taxa_sums(ps.sample),  
+                  OTU = taxa_names(ps.sample))
+head(tdt)
+
+tdt[(TotalCounts <= 0), .N]
+tdt[(TotalCounts <= 1), .N]
+# How many doubletons?
+tdt[(TotalCounts <= 2), .N]
+#
+tdt[(TotalCounts < 10), .N]
+# taxa cumulative sum
+taxsum = tdt[, .N, by = TotalCounts]
+setkey(taxsum, TotalCounts)
+taxsum[, CumSum := cumsum(N)]
+p <- ggplot(taxsum, aes(TotalCounts, CumSum)) + 
+  geom_point() +
+  xlab("Filtering Threshold, Minimum Total Counts") +
+  ylab("OTUs Filtered") +
+  ggtitle("OTUs that would be filtered vs. the minimum count threshold") +
+  theme_bw() 
+
+p
+
+# Zoom-in
+p + xlim(0, 100) + geom_vline(xintercept = c(5,10))
+
+p + xlim(0, 100) + geom_vline(xintercept = c(5,15))
+
+ps.sample <- prune_taxa(tdt$OTU[tdt$TotalCounts >= 1], ps.sample)
+ps.sample
+
+table(sample_sums(ps.sample) < 1000)
+which(sample_sums(ps.sample) < 1000)
+which(sample_sums(ps.sample )< 500)
+#remove samples with too low number of reads
+sample_sums(ps.sample)[order(-sample_sums(ps.sample))]
+ps.clean <- prune_samples(sample_sums(ps.sample) >= 1000, ps.sample)
+ps.clean <- prune_taxa(taxa_sums(ps.clean) > 0, ps.clean)
+ps.clean
+
+hist(sample_sums(ps.sample)[order(-sample_sums(ps.sample))], breaks=20)
+summary(sample_data(ps.clean))
+
+## ----see-depths AFTER contaminant removal--------------------------------------------------------
+
+sample_data(ps.clean)$LibrarySizeFilt <- sample_sums(ps.clean)
+
+df <- as.data.frame(sample_data(ps.clean)) 
+df <- df[order(df$LibrarySize),]
+# or
+df <- df[order(df$LibrarySizeFilt),]
+head(df)
+df$Index <- seq(nrow(df))
+df$Date.Collected
+ggplot(data=metadata, aes(x=Index, y=LibrarySize, color=Island)) + 
+  geom_point(size=2.5) +
+  theme_bw() +
+  theme(axis.title.x= element_text(size=16, margin = margin(t = 10)), 
+        axis.title.y= element_text(size=16, margin = margin(r = 10)),
+        axis.text.y = element_text(size=13, color= "black"), 
+        axis.text.x = element_text(size=13, color= "black")) +
+  theme(panel.grid.minor=element_blank()) +
+  theme(panel.border = element_rect(colour = "grey29")) +
+  theme(legend.title = element_text(size = 16),
+        legend.key.size = unit(0.9, "cm"),
+        legend.text  = element_text(size = 16)) 
+
+# after filtering
+ggplot(data=df, aes(x=Index, y=LibrarySizeFilt, color=Island)) + 
+  geom_point(size=2.5) +
+  theme_bw() +
+  theme(axis.title.x= element_text(size=16, margin = margin(t = 10)), 
+        axis.title.y= element_text(size=16, margin = margin(r = 10)),
+        axis.text.y = element_text(size=13, color= "black"), 
+        axis.text.x = element_text(size=13, color= "black")) +
+  theme(panel.grid.minor=element_blank()) +
+  theme(panel.border = element_rect(colour = "grey29")) +
+  theme(legend.title = element_text(size = 16),
+        legend.key.size = unit(0.9, "cm"),
+        legend.text  = element_text(size = 16)) 
+
+df = data.frame(nreads = sort(taxa_sums(ps.clean), TRUE), sorted = 1:ntaxa(ps.clean), 
+                        type = "OTUs")
+df = rbind(df, data.frame(nreads = sort(sample_sums(ps.clean), TRUE), 
+                          sorted = 1:nsamples(ps.clean), type = "Samples"))
+
+ggplot(df, aes(x = sorted, y = nreads)) + 
+  geom_bar(stat = "identity") +
+  ggtitle("Total nr of reads") + 
+  scale_y_log10() + 
+  facet_wrap(~type, 1, scales = "free") + 
+  theme_bw()
+
+# Transform to RELATIVE ABUNDANCES for weighted Unifrac and bray-curtis 
+# since they are sensitive to differences in total counts. 
+
+ps.clean.rel <- transform_sample_counts(ps.clean, function(x) x / sum(x))
+
+###############################################################
+### RAREFY ### 
+
+set.seed(386)
+#ps.clean.R = rarefy_even_depth(ps.clean, sample.size = 500) #Elin code
+ps.clean.R = rarefy_even_depth(ps.clean, sample.size=min(sample_sums(ps.clean)), rngseed=TRUE, replace=TRUE, trimOTUs=TRUE, verbose=TRUE)
+
+get_taxa_unique(ps.clean, "Phylum")
+get_taxa_unique(ps.clean, "Class")
+
+# Top otus
+# class 20
+top20otus = names(sort(taxa_sums(ps.clean.R), TRUE)[1:20])
+
+#alpha diversity
+div <- alpha(ps.clean, index=c("observed", "diversity_shannon", "evenness_simpson","dominance_relative"))
+
+library(vegan)
+
+
+```
+```{r}
+#faiths phylogenetic diversity
+
+#bring in Bodawatta data
+ASVb <- readRDS("ASV_Table.rds") 
+Taxb <- readRDS("Taxanomy.rds") 
+Metab <- readRDS("Meta.rds")
+Treeb <-read_tree("PNG.tre")
+physeq <- merge_phyloseq(phyloseq(ASVb, Taxb), Metab, Treeb)
+physeq_R<- rarefy_even_depth(physeq, sample.size = min(sample_sums(physeq)),
+rngseed = TRUE, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+jDist2 <- distance(physeq, method = "jaccard")
+hc2 <- hclust(jDist2, method = "average") 
+
+Dist2 <- as.phylo(hc2)
+Phyl <- read_tree("Bird.tre") 
+Phyl<- as.phylo (Phyl)
+
+R2 <- RF.dist(Dist2, Phyl, normalize = TRUE, check.labels = TRUE,rooted = TRUE) 
+R
+
+install.packages("picante")
+library(picante)
+asvtab <- as.data.frame(ps.clean@otu_table)
+f.tree <- ps.clean@phy_tree
+df.pd <- pd(asvtab, f.tree, include.root = T)
+SES <- ses.pd(asvtab, f.tree, null.model = c("taxa.labels"),runs = 999, iterations = 1000, include.root=TRUE)
+
+```
+
+####FROM BODAWATTA paper
+```{r}
+#ordinations (PCoA)
+GP.ord <- ordinate(ps.clean.R, "PCoA", "bray")
+p2 <- plot_ordination(ps.clean.R, GP.ord, type="samples", color="Species", shape = "Foraging.Guild", axes = c(1,2))
+#p2 + geom_point(size=5)+ scale_colour_viridis_d(option = "viridis") + theme_classic() + scale_shape_manual(values=c(2, 6, 17, 1, 16, 0, 7, 15, 5, 18))
+p2
+
+ORD <- ordinate(ps.clean.rel, method = "NMDS", distance = "bray", trymax = 1000, k = 2) 
+p3 = plot_ordination(ps.clean.rel, ORD, type="samples", shape="Foraging.Guild", color="Species") 
+p3 + geom_point(size=4)+ scale_colour_viridis_d(option = "viridis") + theme_classic() + scale_shape_manual(values=c(15, 2, 17, 1, 16, 0, 7, 15, 5, 18))
+
+bDist <- distance(grouphost, method = "bray") 
+jDist <- distance(ps.clean, method = "jaccard")
+wuDist <- distance(ps.clean.R, method = "unifrac") 
+uDist <- distance(ps.clean.R, method = "uunifrac")
+
+
+#host tree for mantel test
+library(ape)
+hosttree <- as.phylo(hosttree)
+tip <- c("'Akohekohe_KM078803.1'")
+host2 <- (drop.tip(hosttree,tip))
+install.packages("adephylo")
+library(adephylo)
+
+phy_dist <- distTips(host2, tips="all", method=c("patristic"), useC=TRUE)
+Man<- mantel(bDist, phy_dist, method="pearson", permutations=10000, strata = NULL,na.rm = FALSE) #didnt work...need to avergage microbiomes by species
+
+plot(bDist, phy_dist, pch=16, xlab="Microbiome", ylab="Host")
+abline(lm(bDist~phy_dist))
+
+jDistgroup <- distance(grouphost, "jaccard")
+bDistgroup <- distance(grouphost, "bray")
+hc <- hclust(bDistgroup, method="average")
+Dist <- as.phylo(hc)
+host2 <- as.phylo(host2)
+library(phangorn)
+
+
+R <- RF.dist(Dist, host2, normalize = TRUE, check.labels = TRUE , rooted=TRUE)
+R
+
+```
+
+```{r}
+library(plyr)
+
+#pcoa
+library(plyr)
+egen_col <- c("#F8766D",
+              "#7fb9d7")
+
+
+#for nmds remove weird sample
+psnmds <- subset_samples(ps.clean.rel, Band.Number!="2390-93300")
+psnmds <- subset_samples(psnmds, Band.Number!="WILD8")
+psnmds <- subset_samples(psnmds, Band.Number!="1601-34254")
+
+noMAAL <-subset_samples(ps.clean.rel, Species != "Maui alauahio")
+
+# choose one of the following distances measures and dataset
+ord_ps = ordinate(ps.clean.rel, "NMDS", k=5, "bray")
+ord_ps3 = ordinate(ps.clean.rel, "NMDS", "wunifrac")
+ord_ps = ordinate(ps.clean.rel, "NMDS", "jaccard")
+
+ord_ps_maal = ordinate(noMAAL, "PCoA", "bray")
+ord_ps = ordinate(ps.clean.R, "PCoA", "bray")
+ord_ps = ordinate(ps.clean.rel, "PCoA", "jaccard")
+ord_group = ordinate(raregroup, "PCoA", "bray")
+ord_ps = ordinate(ps.clean.rel, "PCoA", "wunifrac")
+ord_ps = ordinate(ps.clean.rel, "PCoA", distance = "unifrac")
+ord_ps = ordinate(ps.clean.R)
+
+g4 = plot_ordination(raregroup, ord_group, color = 'Island', shape = 'Foraging.Guild')
+
+g4 +  geom_point(size = 2, aes(fill = Island, shape = Foraging.Guild)) +
+  theme_bw() +
+  #scale_shape_manual(values = c(16, 17)) +
+ scale_fill_manual(values=cbbPalette) +# Colorblind friendly
+  stat_ellipse(aes(fill = Island), type = 'norm') + # Something to consider
+  theme(axis.title.x = element_text(size = 20, margin = margin(t = 7)),
+        axis.title.y = element_text(size = 20, margin = margin(r = 2)),
+        axis.text.y  = element_text(size = 18, color= 'black'),
+        axis.text.x  = element_text(size = 18, color= 'black')) +
+  theme(panel.grid.minor = element_blank(), panel.grid.major = element_blank()) +
+  theme(panel.border = element_rect(color = 'grey29')) +
+  theme(legend.title = element_text(size = 20),
+        legend.key.size = unit(0.95, 'cm'),
+        legend.text  = element_text(size = 18))
+g <- plot_ordination(ps.clean.rel, ord_ps, color = "Island", shape="Foraging.Guild") 
+g 
+pdf("pcoa.pdf", width = 9, height = 5.2) 
+
+g2 <- plot_ordination(noMAAL, ord_ps_maal, color = "Island", shape="Foraging.Guild", label = "Species") 
+g2
+
+library(vegan)
+sample_data(ps.clean)$SampleID 
+df4 = as(sample_data(ps.clean), "data.frame")
+set.seed(386)
+
+sample_data(raregroup)$Abbreviation
+dfg = as(sample_data(raregroup), "data.frame")
+# important to check which format you want the data in, e.g. numeric or factor
+head(df)
+#class(df$Year)
+
+#df$AgeWeek <- as.numeric(as.character(df$AgeWeek))
+
+df4$Foraging.Guild <- as.factor(df4$Foraging.Guild)
+#class(df$ChickID)
+# df$ChickID <- as.factor(df$ChickID)
+
+# Important = group has the same name both years. Therefore we must only use YearGroup column
+#class(df$Group)
+#class(df$YearGroup)
+
+#summary(df)
+#summary(df$Sex)
+#summary(df$ChickID)
+#table(df$YearGroup)
+#length(table(df$YearGroup))
+
+# can z-transform age
+df$AgeWeekZ <- Make.Z(df$AgeWeek)
+df$AgeWeekZ2 <- Make.Z(df$AgeWeek)
+df$AgeWeekZ2 <- (df$AgeWeekZ2)^2
+
+
+
+# run adonis (choose distance method)
+# simple version
+perm1 <- adonis(phyloseq::distance(ps.clean.rel, method="bray") ~ Species + Island + Foraging.Guild + Species:Island, data = df, permutations = 1000)
+permchip <- adonis(phyloseq::distance(ps.clean, method="bray") ~ Species + Island + Foraging.Guild + Species:Island, data = df, permutations = 1000)
+perm2 <- adonis(phyloseq::distance(raregroup, method="bray") ~ Island + Foraging.Guild, data = dfg, permutations = 1000)
+
+
+# version with interactions
+adonis(phyloseq::distance(ps.chicks.rel, method="bray") ~ AgeWeekZ + AgeWeekZ2 + Treatment +
+       Year + YearGroup + Sex + ChickID + AgeWeekZ:Treatment + AgeWeekZ2:Treatment, 
+      data = df, permutations = 1000)
+
+###trying based on chipmunk code
+permbray <- adonis2(distance(ps.clean, method="bray", by="margin") ~ Island+Species+Foraging.Guild+Solution, data = df4)
+                      
+dfperm <- as.data.frame(ps.clean)
+```
+
+###from chipmunk code
+```{r}
+##make microbiome trees
+bray <- vegdist(asvtab, method="bray")
+tree_mic_b <- upgma(bray)
+plot(tree_mic_b)
+
+jDistgroup <- distance(grouphost, "jaccard")
+bDistgroup <- distance(grouphost, "bray")
+un <- distance(grouphost, "unifrac")
+hcj <- hclust(jDistgroup, method="average")
+Distj <- as.phylo(hcj)
+
+hcu <- hclust(un, method="average")
+Distu <- as.phylo(hcu)
+
+tree_mic_b_ACR <- multi2di(Dist, random=TRUE)
+treeJ<- multi2di(Distj, random=TRUE)
+treeu<- multi2di(Distu, random=TRUE)
+tree_ACR <- multi2di(host2, random=TRUE)
+
+RF.dist <- RF.dist(tree_mic_b_ACR, tree_ACR, normalize=TRUE, check.labels = TRUE, rooted=TRUE)
+RF.distj <- RF.dist(treeJ, tree_ACR, normalize=TRUE, check.labels = TRUE, rooted=TRUE)
+RF.distu <- RF.dist(treeu, tree_ACR, normalize=TRUE, check.labels = TRUE, rooted=TRUE)
+#code for doing the randomizations:
+val.un <- vector("numeric",1000)
+for (i in 1:1000){
+  CRun.i <-Dist
+  CRun.i$tip.label<-sample(Dist$tip.label)
+  saveit1<-RF.dist(CRun.i,Dist)
+  val.un[[i]]<-saveit1}
+hist.val.un <- hist(val.un)
+hist.val.un
+summary(hist.val.un)
+
+Ran <- rNNI(Dist, moves = 20, n = 10000)
+Randist <- RF.dist(Ran, tree_ACR, normalize = TRUE, check.labels = TRUE,rooted = TRUE) 
+Null <- abs(Randist)
+exceed_count <- length(Null[Null >= R])
+p_val <- exceed_count / 10000
+p_val
+summary(Null)
+
+library(ade4)
+dist.tree_microbiome_bray_ACR<-cophenetic(tree_mic_b_ACR)
+dist.tree_microbiome_bray_ACRb<-as.dist(dist.tree_microbiome_bray_ACR)
+
+dist.tree_ACR<-cophenetic(tree_ACR)
+dist.tree_ACR<-as.dist(dist.tree_ACR)
+
+mantel.rtest(dist.tree_microbiome_bray_ACRb, dist.tree_ACR, nrepet = 9999)
+
+
+```
+
+```{r, didn't get to work}
+# ALPHA DIVERSITY 
+# (and RICHNESS)
+library("ggplot2")
+# You must use untrimmed, non-normalized count data for meaningful results, as many of these estimates 
+# are highly dependent on the number of singletons. You can always trim the data later on if needed, 
+
+
+specieslabs <- c(
+"Oʻahu 
+ʻAmakihi", "Maui ʻalauahio", "Kiwiku", "ʻAlawī","Warbling White-eye","ʻAkepa", "House Finch","ʻIʻiwi","ʻAkekeʻe", "ʻAkiapolaʻau", "Hawaiʻi ʻAmakihi", "ʻAnianiau","ʻApapane", "Kauaʻi ʻAmakihi","ʻAkikiki", "Palila")
+
+plot_richness(ps.clean.R, x = "Species", color = "Species", measures="Shannon", sortby = "Shannon") +
+  theme_classic() +
+  geom_boxplot() +
+  theme(legend.position = "none") +
+  labs(title=NULL)+
+  scale_x_discrete(labels = specieslabs) +
+  ylab("Shannon Diversity") +
+  theme(legend.title = element_blank(), axis.title.x=element_blank(), axis.text.x = element_text(angle = 90))
+) 
+
+head(p$data)
+#
+ggplot(ps.clean.R, aes(x = Island, y = value, fill = Island)) +
+  geom_boxplot(alpha = 1, color = "black", outlier.color = "white", outlier.size = 0, lwd=0.36,
+               width = 0.7) +
+  geom_point(position = position_jitterdodge(jitter.width = 0.35),
+             alpha = 1, size = 1.8, color = "black", pch = 21) +  # funkar
+  # ylab("Richness") + xlab("") + theme_bw() +
+  ylab("Alpha diversity") + xlab("") + theme_bw() +
+  # ylab("Phylogenetic diversity") + xlab("Age (weeks)") + theme_bw() +
+  theme(axis.title.x = element_text(size=20, margin=margin(t=7)), 
+        axis.title.y = element_text(size=20, margin=margin(r=8)),
+        axis.text.y  = element_text(size=18, color="black"), 
+        axis.text.x  = element_text(size=18, color="black",margin=margin(t=3)),
+        strip.text.x = element_blank()) +
+  theme(panel.border = element_rect(colour = "grey29"),
+        panel.grid.minor = element_blank(), panel.grid.major = element_blank()) +
+  # theme(legend.position="none") +
+  # scale_y_continuous(limits=c(1, 3.8)) +
+  scale_fill_manual(values = egen_col) +
+  scale_color_manual(values = egen_col) +
+  theme(legend.title = element_text(size=17),
+      legend.text = element_text(size=17),
+      legend.key.size = unit(1,"cm") )
+
+p2 <- plot_richness(ps.clean.R, x = "Species", measures = "Shannon") 
+p3 <- plot_richness(ps.clean.R, x = "Species", color = "Species", measures="Shannon", sortby = "Shannon") 
+
+aov.shannon <- aov(value ~ Species, data=p2$data)
+out <- HSD.test(aov.shannon, "Species", group=TRUE)
+out
+p2
+```
+
+##using files with removed contaminants IDed from Decontam 
+```{r}
+ASVs = as.matrix(read.delim("otu_table16S_neg.tsv", row.names=1, , fill=TRUE, stringsAsFactors=FALSE, check.names = FALSE))
+#ASVs= read.table(file="otu_table16S_neg.tsv", header=TRUE, check.names=FALSE, fill=TRUE)
+ASVs2 <- t(ASVs)
+ASV_table <- otu_table(ASVs2, taxa_are_rows = FALSE)
+tax <- as.matrix(read.delim("taxonomy3.txt", row.names = 1, fill=TRUE, stringsAsFactors = FALSE))
+tax <- gsub("d__","", tax) #to remove unwanted "d_" in taxa names
+tax <- gsub("p__","", tax)
+tax <- gsub("c__","", tax)
+tax <- gsub("o__","", tax)
+tax <- gsub("f__","", tax)
+tax <- gsub("g__","", tax)
+tax <- gsub("s__","", tax)
+tax16 <- tax_table(tax)
+meta <- read.csv("PhyloMetadata3.csv", header = TRUE)
+
+rownames(meta) <- meta$sample.id
+sampledata = sample_data(meta)
+tree = import_qiime(treefilename = "16Srootedtree.nwk")
+bactphy = merge_phyloseq(sampledata, tax16, ASV_table, tree)
+
+```
+
+```{r}
+#trying to make trees
+uni <- distance(ps.clean.rel, "uUniFrac")
+colorScale    <- rainbow(length(levels(get_variable(ps.clean.rel, "Species"))))
+cols          <- colorScale[get_variable(ps.clean.rel, "Species")] 
+GP.tip.labels <- as(get_variable(ps.clean.rel, "Species"), "character")
+tree <- hclust(uni, method="average")
+plot(tree, col=cols)
+
+
+head(phy_tree(ps.clean.rel))
+ntaxa(ps.clean.rel)
+physeq <- prune_taxa(taxa_names(ps.clean.rel)[1:100], ps.clean.rel)
+plot_tree(physeq, color="Island")
+
+
+```
+
+
+###Export to use in vegan package
+
+```{r}
+asv16s <- as(otu_table(ps.clean.R), "matrix")
+asv16s <- t(asv16s) #transpose 
+asv16s <- as.data.frame(asv16s)
+asv16s <- cbind(rownames(asv16s), asv16s)
+rownames(asv16s) <- NULL
+colnames(asv16s) <- c(names(asv16s))
+colnames(asv16s)[1] <- "sampleID" #rename the first column
+
+tax16s <- tax_table(ps.clean.R)
+tax16s <- as.data.frame(tax16s) #export taxonomy table for vegan
+meta16s <- sample_data(ps.clean.R)
+meta16sdf <- as(sample_data(ps.clean.R), "data.frame")
+meta16sdf <- cbind(rownames(meta16sdf), meta16sdf)
+rownames(meta16sdf) <- NULL
+colnames(meta16sdf) <- c(names(meta16sdf))
+metad16sdf <- colnames(meta16sdf)[1] <- "sampleID" 
+#meta <- subset(meta, Sample_or_Control=="Sample")
+#join asvs and metadata
+vegan16s <- join(asv16s, meta16sdf, by = "sampleID", type ="left", match ="first") 
+
+
+```
+
+#exploratory plots
+```{r}
+plot_richness(honeycreep, x = "Species", measures = c("Chao1", "Shannon"), sortby = "Chao1")
+plot_richness(honeycreep, x = "Island", measures = c("Chao1", "Shannon"), sortby = "Chao1")
+plot_richness(honeycreep, x = "Foraging.Guild", measures = c("Chao1", "Shannon"), sortby = "Chao1")
+
+```
+###NMDS Plots
+
+```{r}
+#rarefy data first 
+rare = rarefy_even_depth(honeycreep, sample.size=min(sample_sums(honeycreep)), rngseed = 3, 
+                        replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+
+plot1_ord = ordinate(raregroup, "PCoA", distance = "unifrac")
+labelstheme<- theme(plot.title = element_text(family="Arial", face = "bold", size=(15)),
+                    legend.title = element_text(colour = "steelblue", 
+                    face = "bold.italic",family = "Arial"), 
+                    legend.text = element_text(family = "Arial"))
+
+
+
+p1=plot_ordination(raregroup, plot1_ord,type="samples", color="Island", shape = "Foraging.Guild") +
+   scale_fill_manual(values=cbbPalette) 
+p2 = p1 +
+  geom_point(size = 2, aes(fill = Island, shape = Foraging.Guild))+
+  #stat_ellipse(geom="polygon",type="t", alpha=0.2, aes(fill=Island)) +
+  theme_bw() 
+p2
+
+p3 = plot_ordination(raregroup, plot1_ord, type="samples", color="Island", label = "Abbreviation")           
+p3
+
+####################3
+##############
+
+plot1_ord = ordinate(ps.clean.rel, "NMDS", distance = "unifrac")
+labelstheme<- theme(plot.title = element_text(family="Arial", face = "bold", size=(15)),
+                    legend.title = element_text(colour = "steelblue", 
+                    face = "bold.italic",family = "Arial"), 
+                    legend.text = element_text(family = "Arial"))
+
+p1=plot_ordination(ps.clean.rel, plot1_ord,type="samples", color="Island")
+p2 = p1 +
+  #stat_ellipse(geom="polygon",type="t", alpha=0.2, aes(fill=Island)) +
+  theme_bw() 
+p2
+
+p3 = plot_ordination(raregroup, plot1_ord, type="samples", color="Island", label = "Abbreviation")
+p3
+
+```
+#Heatmap
+
+```{r}
+class <- tax_glom(honeycreep, taxrank = "Class", NArm=TRUE)
+TopNOTUs = names(sort(taxa_sums(class), TRUE)[1:35])
+top50= prune_taxa(TopNOTUs, class)
+plotheat<-plot_heatmap(top50, "NMDS", "bray", sample.label = "Species", taxa.label="Class", sample.order= "Species",low="#66CCFF", high="#000033", na.value="white")
+q1 <- plotheat+ facet_grid(~sample_Species, scales= "free_x", switch = "x")
+q2 <- q1 + theme(
+  axis.text.x = element_blank(),
+  axis.ticks = element_blank()
+) 
+plot(q2)
+```
+
+```{r}
+abund <- transform_sample_counts(honeycreep, function(x) x / sum(x) )
+glom <- tax_glom(abund, taxrank = 'Phylum')
+glom # should list # taxa as # phyla
+data <- psmelt(glom) # create dataframe from phyloseq object
+data$Phylum <- as.character(data$Phylum) #convert to character
+#simple way to rename phyla with < 1% abundance
+data$Phylum[data$Abundance < 0.01] <- "< 1% abund."
+medians <- ddply(data, ~Phylum, function(x) c(median=median(x$Abundance)))
+remainder <- medians[medians$median <= 0.01,]$Phylum
+data[data$Phylum %in% remainder,]$Phylum <- "Phylum < 1% abund."
+data$Phylum[data$Abundance < 0.01] <- "Phylum < 1% abund."
+p <- ggplot(data=data, aes(x=Sample, y=Abundance, fill=Phylum))
+p + geom_bar(aes(), stat="identity", position="stack") +
+  scale_fill_manual(values = c( "darkorange1","gold" ,"darkorchid3","darkgreen","green3",
+                                "seagreen1" ,"magenta" , "dodgerblue1","pink","brown1",
+                                "firebrick","blue3" , "gray1","cyan1","deeppink", "lightpink", "blue", "snow3", "chocolate2", "lemonchiffon", "coral2", "cadetblue", "maroon4", "thistle1")) +
+   theme(legend.position="bottom", axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + guides(fill=guide_legend(nrow=5)) + 
+         facet_grid(~sample_Species, scales="free", space="free")
+
+```
+###Exploratory Vegan Stuff###
+```{r}
+#permanova
+#bact_ps <- phyloseq::distance(honeycreep, method="bray")
+
+#perm <- adonis(bact_ps~ Species + Island, by="margin", data=meta16sdf, permutations = 10000)
+#perm
+
+#alpha diversity
+wide2 <-vegan16s[,c(1:13148)]
+colnames(wide2)
+#wide<- as_tibble(wide)
+wide2 <-t(wide2)
+wide2 <- as.data.frame(wide2)
+names(wide2) <- as.matrix(wide2[1, ])
+wide2 <- wide2[-1, ]
+wide2[] <- lapply(wide2, function(x) type.convert(as.character(x)))
+wide2
+#alpha measurements 
+vegan16s$simpson <- diversity(wide2[,vegan16s$sampleID], MARGIN=2, index = "simpson") 
+vegan16s$shannon <- diversity(wide2[,vegan16s$sampleID], MARGIN=2, index = "shannon") 
+vegan16s$invsimpson <- diversity(wide2[,vegan16s$sampleID], MARGIN=2, index = "invsimpson")
+
+specieslabs <- c("Oʻahu ʻAmakihi", "Maui ʻalauahio", "Kiwiku", "ʻAlawī","Warbling White-eye","ʻAkepa", "House Finch","ʻIʻiwi","ʻAkekeʻe", "ʻAkiapolaʻau", "Hawaiʻi ʻAmakihi", "ʻAnianiau","ʻApapane", "Kauaʻi ʻAmakihi","ʻAkikiki", "Palila")
+
+#vegan16s$Species <- factor(vegan16s$Species, levels=c("Akekee","Akikiki", "Akepa", "Akiapolaau", "Alawi", "Maui alauahio", "Kiwiku ", "Anianiau",  "Kauai amakihi", "Oahu amakihi", "Hawaii Amakihi","Warbling white-eye","Apapane", "Iiwi",  "Palila", "House finch"))
+alpha <- ggplot(vegan16s, aes(x = fct_reorder(Species, shannon), y = shannon, fill = Species)) + 
+  theme_classic() +
+  geom_boxplot() +
+  labs(y = "Shannon Diversity") +
+  theme(legend.position = "none") +
+ scale_x_discrete(labels = specieslabs) +
+  geom_jitter(width=0.1,alpha=0.2) +
+  theme(legend.title = element_blank(), axis.text.x=element_text(color = "black", size=11, angle=90), axis.title.x=element_blank(), plot.margin = margin(1, 1, 1, 1, "cm")) 
+) 
+
+ggplot(vegan16s, aes(x = Foraging.Guild, y = shannon, fill = Foraging.Guild)) + 
+  geom_boxplot() +
+  labs(
+    y = "Shannon Diversity"
+  ) +
+  theme_classic() 
+)
+ggplot(vegan16s, aes(x = Island, y = shannon, fill = Island)) + 
+  geom_boxplot() +
+  labs(
+    y = "Shannon Diversity"
+  ) +
+  theme_classic() 
+)
+FGlab <- c("Generalist", "Insectivorous", "Nectarivore", "Granivore")
+ggplot(vegan16s, aes(x = Foraging.Guild, y = shannon, fill = Foraging.Guild)) + 
+  theme_classic() +
+  geom_boxplot() +
+  xlab("Foraging Guild")+
+  theme(legend.position = "none", ) +
+  labs(y = "Shannon Diversity") +
+  scale_x_discrete(labels = FGlab) +
+  geom_jitter(width=0.1,alpha=0.2)
+)
+)
+#calculate sequencing depth
+#depth <-colSums(wide2)
+#vegan16s$depth <- depth
+
+#Ordinations in vegan
+#BC.nmds <- metaMDS(asv16s[,2:17885], distance="bray", k=2, trymax=1000)
+#calculate sequencing depth 
+depth <- colSums(wide3)
+vegan16s2$depth <- depth
+
+#rarefaction curve
+#S <- specnumber(coiotu)
+tcoiotu <- t(coiotu)
+raremax <- min(rowSums(tcoiotu))
+#Srare <- rarefy(coiotu, raremax)
+rarecurve(tcoiotu, step = 20, sample = raremax,  col = "blue")
+
+asv16s2 <- as(otu_table(ps.clean), "matrix")
+asv16s2 <- t(asv16s2) #transpose 
+asv16s2 <- as.data.frame(asv16s2)
+asv16s2 <- cbind(rownames(asv16s2), asv16s2)
+rownames(asv16s2) <- NULL
+colnames(asv16s2) <- c(names(asv16s2))
+colnames(asv16s2)[1] <- "sampleID" #rename the first column
+
+tax16s2  <- tax_table(ps.clean)
+tax16s2 <- as.data.frame(tax16s2) #export taxonomy table for vegan
+meta16s2 <- sample_data(ps.clean)
+meta16sdf2 <- as(sample_data(ps.clean), "data.frame")
+meta16sdf2 <- cbind(rownames(meta16sdf2), meta16sdf2)
+rownames(meta16sdf2) <- NULL
+colnames(meta16sdf2) <- c(names(meta16sdf2))
+metad16sdf2 <- colnames(meta16sdf2)[1] <- "sampleID" 
+#meta <- subset(meta, Sample_or_Control=="Sample")
+#join asvs and metadata
+vegan16s2 <- join(asv16s2, meta16sdf2, by = "sampleID", type ="left", match ="first")
+#alpha diversity
+wide3 <-vegan16s2[,c(1:21471)]
+colnames(wide3)
+#wide<- as_tibble(wide)
+wide3 <-t(wide3)
+wide3 <- as.data.frame(wide3)
+names(wide3) <- as.matrix(wide3[1, ])
+wide3 <- wide3[-1, ]
+wide3[] <- lapply(wide3, function(x) type.convert(as.character(x)))
+wide3
+#alpha measurements 
+vegan16s2$simpson <- diversity(wide3[,vegan16s2$sampleID], MARGIN=2, index = "simpson") 
+vegan16s2$shannon <- diversity(wide3[,vegan16s2$sampleID], MARGIN=2, index = "shannon") 
+vegan16s2$invsimpson <- diversity(wide3[,vegan16s2$sampleID], MARGIN=2, index = "invsimpson")
+
+#glm for alpha
+glmmod = glm(shannon ~ Species + depth, data=vegan16s2)
+summary(glmmod)
+Anova(mod3)
+
+
+```
+
+
+##grouped data to make dendrograms
+
+```{r}
+library(qiime2R)
+grouphost <- qza_to_phyloseq(
+  tree = "16Srooted-tree.qza",
+  features = "groupedbyspecieshost.qza",
+  taxonomy ="16S_silva_taxonomy.qza",
+  metadata = "PhyloMetadata_grouphost.txt"
+)
+grouphost <- subset_samples(grouphost, Island!="Additional")
+#physeq16s = prune_samples(sample_sums(physeq16s)>=10, physeq16s)
+otu_table <- as(otu_table(grouphost), "matrix") 
+
+plot_tree(grouphost, color= "Abbreviation")
+specgrrare <- rarefy_even_depth(grouphost, sample.size=min(sample_sums(grouphost)), rngseed = 3, replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+
+GPUF <- UniFrac(grouphost)
+bDistgroup <- distance(grouphost, method = "bray")
+
+
+colorScale    <- rainbow(length(levels(get_variable(group, "Abbreviation"))))
+cols          <- colorScale[get_variable(group, "Abbreviation")] 
+GP.tip.labels <- as(get_variable(group, "Abbreviation"), "character")
+# This is the actual hierarchical clustering call, specifying average-link clustering
+GP.hclust     <- hclust(GPUF, method="average")
+plot(GP.hclust)
+plot(tree, cex=1)
+library(ape)
+plot(as.phylo(GP.hclust), cex = 0.9)
+ggdendrogram(GP.hclust, rotate = TRUE)
+
+
+
+
+###TRY another way 
+library(vegan)
+ps_rel_otu <- data.frame(phyloseq::otu_table(phygroup))
+ps_rel_otu <- t(ps_rel_otu)
+bc_dist <- vegan::vegdist(ps_rel_otu, method = "bray")
+as.matrix(bc_dist)
+upgma <- as.dendrogram(hclust(bc_dist, method = "average"))
+meta <- data.frame(phyloseq::sample_data(phygroup))
+colorCode <- c(`Kauai` = "red", `Maui` = "blue",`Big Island`="green", `Oahu`="yellow")
+labels_colors(upgma) <- colorCode[meta$Island][order.dendrogram(upgma)]
+plot(upgma)
+
+upgma2 <- as.dendrogram(hclust(GPUF, method = "average"))
+meta <- data.frame(phyloseq::sample_data(phygroup))
+colorCode <- c(`Kauai` = "red", `Maui` = "blue",`Big Island`="green", `Oahu`="yellow")
+branches_color(upgma2) <- colorCode[meta$Island][order.dendrogram(upgma2)]
+plot(upgma2)
+plot(upgma2, hang = -1, cex = 0.6)
+library(ape)
+plot(as.phylo(upgma2), cex=0.5, label.offset = 0.1)
+
+install.packages("ggdendro")
+library("ggplot2")
+library("ggdendro")
+ggdendrogram(GP.hclust)
+dend <- ggdendrogram(GP.hclust, rotate = TRUE)
+d1 <- color_branches(GP.hclust, k=4)
+library(dendextend)
+
+
+
+####Kiwikui not loading in for some reason so trying again
+#read in otu table
+otu2 <- read.table(file = "otu_tableIsland3.txt", header = TRUE, sep = '\t', fill = T, check.names = FALSE)
+head(otu2)
+
+#read in taxonomy 
+tax2 <- read.table(file = "taxonomy.tsv", sep = '\t', header = TRUE)
+head(tax2)
+merged_file2 <- merge(otu2, tax2, by.x = c("OTU"), by.y = c("Feature.ID"))
+write.table(merged_file2, file = "combined_otu_group.tsv", sep = "\t", col.names = TRUE, row.names = FALSE)
+
+rm(merged_file2)
+
+
+##import into phyloseq
+otu_table_in2 <- otu2      
+rownames(otu_table_in2) <- otu_table_in2$OTU
+otu_table_in2$OTU <- NULL
+otu_table_in2 <- as.matrix(otu_table_in2)
+head(otu_table_in2)
+
+rm(otu2)
+
+
+#fix taxonomy file and then export
+tax <- as.matrix(read.delim("taxonomy.original.txt", row.names = 1, fill=TRUE, stringsAsFactors = FALSE))
+tax <- gsub("d__","", tax) #to remove unwanted "d_" in taxa names
+tax <- gsub("p__","", tax)
+tax <- gsub("c__","", tax)
+tax <- gsub("o__","", tax)
+tax <- gsub("f__","", tax)
+tax <- gsub("g__","", tax)
+
+tax <- gsub("s__","", tax)
+write.table(tax, file="taxonomy_editedgroup.tsv", sep = "\t", 
+            col.names = TRUE, row.names = TRUE)
+taxonomy2 <- read.table("taxonomy_editedgroup.tsv", sep = "\t", header=T,  check.names = FALSE)
+taxonomy2 <- as.matrix(taxonomy2)
+head(taxonomy2)
+
+#read in metadata
+metadata2 <- read.table("PhyloMetadata_group3.txt", row.names = 1, header=T,
+                       sep = "\t")
+head(metadata2)
+
+#read in tree
+phy_tree <- read_tree("16Srootedtree.nwk")
+
+# Import all as phyloseq objects
+OTU2 <- otu_table(otu_table_in2, taxa_are_rows = TRUE)
+
+TAX2 <- tax_table(taxonomy2)
+META2 <- sample_data(metadata2)
+
+taxa_names(TAX2)
+taxa_names(OTU2)
+taxa_names(phy_tree)
+
+# Same with sample names
+sample_names(OTU2)
+sample_names(META2)
+head(OTU)
+head(META)
+length(colnames(OTU))
+
+#Put it all together in phyloseq object 
+phygroup <- phyloseq(OTU2, META2,TAX2,phy_tree)
+
+
+sample_data(phygroup)$LibrarySizeFilt <- sample_sums(phygroup)
+
+df2 <- as.data.frame(sample_data(phygroup)) 
+df2 <- df2[order(df2$LibrarySize),]
+# or
+#df <- df[order(df$LibrarySizeFilt),]
+head(df2)
+df2$Index <- seq(nrow(df2))
+
+
+
+# after filtering
+ggplot(data=df2, aes(x=Index, y=LibrarySizeFilt, color=Island)) + 
+  geom_point(size=2.5) +
+  theme_bw() +
+  theme(axis.title.x= element_text(size=16, margin = margin(t = 10)), 
+        axis.title.y= element_text(size=16, margin = margin(r = 10)),
+        axis.text.y = element_text(size=13, color= "black"), 
+        axis.text.x = element_text(size=13, color= "black")) +
+  theme(panel.grid.minor=element_blank()) +
+  theme(panel.border = element_rect(colour = "grey29")) +
+  theme(legend.title = element_text(size = 16),
+        legend.key.size = unit(0.9, "cm"),
+        legend.text  = element_text(size = 16)) 
+
+df3 = data.frame(nreads = sort(taxa_sums(phygroup), TRUE), sorted = 1:ntaxa(phygroup), 
+                        type = "OTUs")
+df3 = rbind(df3, data.frame(nreads = sort(sample_sums(phygroup), TRUE), 
+                          sorted = 1:nsamples(phygroup), type = "Samples"))
+
+ggplot(df3, aes(x = sorted, y = nreads)) + 
+  geom_bar(stat = "identity") +
+  ggtitle("Total nr of reads") + 
+  scale_y_log10() + 
+  facet_wrap(~type, 1, scales = "free") + 
+  theme_bw()
+
+# Transform to RELATIVE ABUNDANCES for weighted Unifrac and bray-curtis 
+# since they are sensitive to differences in total counts. 
+
+ps.clean.rel <- transform_sample_counts(ps.clean, function(x) x / sum(x))
+
+###############################################################
+### RAREFY ### 
+
+raregroup = rarefy_even_depth(phygroup, sample.size=min(sample_sums(phygroup)), rngseed = 3, 
+                        replace = TRUE, trimOTUs = TRUE, verbose = TRUE)
+
+#this is normal phyloseq object with actual co
+
+group2 <- subset_samples(ps, Island!="Additional")
+#physeq16s = prune_samples(sample_sums(physeq16s)>=10, physeq16s)
+otu_table <- as(otu_table(group), "matrix") 
+
+#plot_tree(group, color= "Abbreviation")
+GPUF <- UniFrac(phygroup)
+rareUF <- UniFrac(raregroup)
+WUF <-UniFrac(group, weighted=TRUE)
+psUF <- UniFrac(ps.clean.R)
+
+bDistgroup <- distance(raregroup, method="bray")
+
+
+colorScale    <- rainbow(length(levels(get_variable(group, "Abbreviation"))))
+cols          <- colorScale[get_variable(group, "Abbreviation")] 
+GP.tip.labels <- as(get_variable(group, "Abbreviation"), "character")
+# This is the actual hierarchical clustering call, specifying average-link clustering
+GP.hclust     <- hclust(GPUF, method="average")
+plot(GP.hclust)
+
+colorScale    <- rainbow(length(levels(get_variable(group, "Abbreviation"))))
+cols          <- colorScale[get_variable(group, "Abbreviation")] 
+GP.tip.labels <- as(get_variable(group, "Abbreviation"), "character")
+# This is the actual hierarchical clustering call, specifying average-link clustering
+GP.hclust     <- hclust(rareUF, method="average")
+dev.new(width=5, height=4)
+plot(GP.hclust, labels=FALSE)
+
+PS.hclust <- hclust(psUF, method="average")
+plot(PS.hclust)
+  
+GP.d <- as.dendrogram(GP.hclust)
+plot(GP.d)
+plot(GP.d, type="rectangle", ylab="Height")
+```
+
+
+
+```{r}
+sdt2 = data.table(as(sample_data(phygroup), "data.frame"),
+                 TotalReads = sample_sums(phygroup), keep.rownames = TRUE)
+pSeqDepth = ggplot(sdt2, aes(TotalReads)) +
+  geom_histogram() +
+  ggtitle("Sequencing Depth")
+pSeqDepth + facet_wrap(~Abbreviation)
+```
+
+```{r}
+###barplots 
+melt <- psmelt(ps.clean.rel)
+ggplot(melt,
+       aes(x=SampleID, y=Abundance, order = as.factor(Phylum))) + 
+  geom_bar(aes(fill=Phylum), stat="identity", position="stack")+ #, color="black") +
+  ylab("Relative abundance") + xlab(NULL) + theme_bw() +
+  theme(panel.grid.minor=element_blank(), panel.grid.major=element_blank()) +
+  theme(axis.title.x = element_text(size=22), 
+        axis.title.y = element_text(size=22, margin=margin(r=8)),
+        axis.text.y = element_text(size=18, color ="black"), 
+        axis.text.x = element_text(size=18, color ="black")) +             
+  theme(legend.title = element_text(size=18), 
+        legend.text = element_text(size=18),
+        legend.key.size=unit(0.9,"cm") ) 
+melt2 <- melt
+
+table(melt2$Phylum, useNA="ifany") # table of phyla
+melt2$Phylum[melt2$Phylum==""] <- "NA" # change if there are empty names to NA
+table(melt2$Phylum, useNA="ifany")
+
+# calculate sum of abundances
+taxa_summary <- aggregate(melt2$Abundance, by=list(Category= melt2$Phylum), FUN=sum)
+taxa_summary <- taxa_summary[order(-taxa_summary$x) ,]
+head(taxa_summary)
+
+list(as.character(taxa_summary[-c(1:12),1])) 
+melt2$Phylum <- revalue(melt2$Phylum, 
+                    c("Bdellovibrionota" = "Other",
+                      "WPS-2" = "Other",
+                      "Verrucomicrobiota" = "Other",
+                      "Deinococcota" = "Other",
+                      "Patescibacteria" = "Other",
+                      "Armatimonadota" = "Other",
+                      "Gemmatimonadota" = "Other",
+                      "Fusobacteriota" ="Other",
+                      "Methylomirabilota" = "Other",
+                      "RCP2-54" = "Other",
+                      "Desulfobacterota"= "Other",
+                      " Dependentiae"   = "Other",
+                     " Rs-K70_termite_group"  = "Other",
+                     " Elusimicrobiota"   ="Other",
+                     " Nitrospirota" = "Other",
+                     " NB1-j"  = "Other",
+                    " Fibrobacterota"= "Other",
+                    " MBNT15" ="Other",
+                    " Sva0485" = "Other",
+                    " Sumerlaeota" = "Other",
+                    " FCPU426" = "Other",
+                    " Latescibacterota" = "Other",
+                    " Abditibacteriota" = "Other",
+                    " Entotheonellaeota"  = "Other",
+                    " GAL15" = "Other",
+                    " Deferribacterota" = "Other",
+                    " WS4" = "Other",
+                    " SAR324_clade(Marine_group_B)" = "Other",
+                    " PAUC34f"= "Other",
+                    " Margulisbacteria" = "Other",
+                    "NA" = "Other"))     
+table(melt2$Phylum, useNA="ifany")
+table(is.na(melt2$Phylum))                    
+
+melt2$Phylum <- factor(melt2$Phylum, levels=
+                     c("Proteobacteria", "Firmicutes", " Actinobacteriota",
+                       "Spirochaetota", "Chloroflexi","Other"))
+levels(melt2$Phylum)
+
+ggplot(melt2, aes(x=Species, y=Abundance, order = Phylum)) + 
+  geom_bar(aes(fill=Phylum), stat="identity", position="stack")+ #, color="black") +
+  ylab("Relative abundance") + xlab(NULL) + theme_bw() +
+  # coord_flip() + # comment out this line if you want vertical bars
+  theme(panel.grid.minor=element_blank(), panel.grid.major=element_blank()) +
+  theme(axis.title.x = element_text(size=22), 
+        axis.title.y = element_text(size=22),
+        axis.text.y = element_text(size=13, color ="black"), 
+        axis.text.x = element_text(size=11, color ="black", angle=270, vjust=0.5)) +             
+  theme(legend.title = element_text(size=18), 
+        legend.text = element_text(size=18),
+        legend.key.size=unit(0.9,"cm") ) +
+  scale_fill_brewer(palette="Paired")
+
+####ABOVE IS NOT WORKING RIGHT
+
+generalist  <- subset_samples(ps.clean, Foraging.Guild=="Generalist ")
+insect <- subset_samples(ps.clean, Foraging.Guild=="Insectivorous ")
+seed <- subset_samples(ps.clean, Foraging.Guild=="Seed-eater")
+nectar <- subset_samples(ps.clean, Foraging.Guild=="Nectar ")
+
+abund <- transform_sample_counts(insect, function(x) x / sum(x) )
+
+glom <- tax_glom(abund, taxrank = 'Phylum') 
+glom # should list # taxa as # phyla
+data <- psmelt(glom) # create dataframe from phyloseq object
+data$Phylum <- as.character(data$Phylum) #convert to character
+#simple way to rename phyla with < 1% abundance
+
+data$Phylum[data$Abundance < 0.10] <- "Other"
+medians <- ddply(data, ~Phylum, function(x) c(median=median(x$Abundance)))
+
+remainder <- medians[medians$median <= 0.10,]$Phylum
+data[data$Phylum %in% remainder,]$Phylum <- "Other"
+data$Phylum[data$Abundance < 0.10] <- "Other"
+p <- ggplot(data=data, aes(x=Sample, y=Abundance, fill=Phylum))
+p + geom_bar(aes(), stat="identity", position="fill") +
+  scale_fill_manual(values = c( "darkorange1","gold" ,"darkorchid3","darkgreen","green3",
+                                "seagreen1" ,"magenta" , "dodgerblue1","pink","brown1",
+                                "firebrick","blue3" , "gray1","cyan1","deeppink", "lightpink", "blue", "snow3", "chocolate2", "lemonchiffon", "coral2", "cadetblue", "maroon4", "thistle1")) +
+  theme(legend.position="bottom", axis.text.x=element_blank(),#panel.border = element_blank(), 
+       panel.spacing.x = unit(0,"line"), 
+       axis.ticks.x=element_blank()) +  
+      guides(fill=guide_legend(nrow=5)) + 
+      facet_grid(~Foraging.Guild, scales="free", space="free") 
+
+abund2 <- transform_sample_counts(insect, function(x) x / sum(x) )
+
+glom2 <- tax_glom(abund2, taxrank = 'Phylum')
+glom # should list # taxa as # phyla
+data2 <- psmelt(glom2) # create dataframe from phyloseq object
+data2$Phylum <- as.character(data2$Phylum) #convert to character
+#simple way to rename phyla with < 1% abundance
+
+data2$Phylum[data2$Abundance < 0.30] <- "Other"
+medians2 <- ddply(data2, ~Phylum, function(x) c(median=median(x$Abundance)))
+remainder2 <- medians2[medians2$median <= 0.30,]$Phylum
+data[data$Phylum %in% remainder2,]$Phylum <- "Other"
+data$Phylum[data$Abundance < 0.30] <- "Other"
+p2 <- ggplot(data=data2, aes(x=Sample, y=Abundance, fill=Phylum))
+p2 + geom_bar(aes(), stat="identity", position="stack") +
+  scale_fill_manual(values = c( "darkorange1","gold" ,"darkorchid3","darkgreen","green3",
+                                "seagreen1" ,"magenta" , "dodgerblue1","pink","brown1",
+                                "firebrick","blue3" , "gray1","cyan1","deeppink", "lightpink", "blue", "snow3", "chocolate2", "lemonchiffon", "coral2", "cadetblue", "maroon4", "thistle1")) +
+  theme(legend.position="bottom", axis.text.x=element_blank(),#panel.border = element_blank(), 
+       panel.spacing.x = unit(0,"line"), 
+       axis.ticks.x=element_blank()) +  
+      guides(fill=guide_legend(nrow=5)) + 
+      facet_grid(~sample_Species, scales="free", space="free") 
+
+
+abund3 <- transform_sample_counts(nectar, function(x) x / sum(x) )
+
+glom3 <- tax_glom(abund3, taxrank = 'Phylum')
+glom # should list # taxa as # phyla
+data3 <- psmelt(glom3) # create dataframe from phyloseq object
+data3$Phylum <- as.character(data3$Phylum) #convert to character
+#simple way to rename phyla with < 1% abundance
+
+data3$Phylum[data3$Abundance < 0.20] <- "Other"
+medians3 <- ddply(data3, ~Phylum, function(x) c(median=median(x$Abundance)))
+remainder3 <- medians3[medians3$median <= 0.20,]$Phylum
+data3[data3$Phylum %in% remainder3,]$Phylum <- "Other"
+data3$Phylum[data3$Abundance < 0.20] <- "Other"
+p3 <- ggplot(data=data3, aes(x=Sample, y=Abundance, fill=Phylum))
+p3 + geom_bar(aes(), stat="identity", position="stack") +
+  scale_fill_manual(values = c( "darkorange1","gold" ,"darkorchid3","darkgreen","green3",
+                                "seagreen1" ,"magenta" , "dodgerblue1","pink","brown1",
+                                "firebrick","blue3" , "gray1","cyan1","deeppink", "lightpink", "blue", "snow3", "chocolate2", "lemonchiffon", "coral2", "cadetblue", "maroon4", "thistle1")) +
+  theme(legend.position="bottom", axis.text.x=element_blank(),#panel.border = element_blank(), 
+       panel.spacing.x = unit(0,"line"), 
+       axis.ticks.x=element_blank()) +  
+      guides(fill=guide_legend(nrow=5)) + 
+      facet_grid(~sample_Species, scales="free", space="free") 
+
+
+
+abund4 <- transform_sample_counts(seed, function(x) x / sum(x) )
+
+glom4 <- tax_glom(abund4, taxrank = 'Phylum')
+glom # should list # taxa as # phyla
+data4 <- psmelt(glom4) # create dataframe from phyloseq object
+data4$Phylum <- as.character(data4$Phylum) #convert to character
+#simple way to rename phyla with < 1% abundance
+
+data4$Phylum[data4$Abundance < 0.20] <- "Other"
+medians4 <- ddply(data4, ~Phylum, function(x) c(median=median(x$Abundance)))
+remainder4 <- medians4[medians4$median <= 0.20,]$Phylum
+data4[data4$Phylum %in% remainder4,]$Phylum <- "Other"
+data4$Phylum[data4$Abundance < 0.20] <- "Other"
+p4 <- ggplot(data=data4, aes(x=Sample, y=Abundance, fill=Phylum))
+p4 + geom_bar(aes(), stat="identity", position="stack") +
+  scale_fill_manual(values = c( "darkorange1","gold" ,"darkorchid3","darkgreen","green3",
+                                "seagreen1" ,"magenta" , "dodgerblue1","pink","brown1",
+                                "firebrick","blue3" , "gray1","cyan1","deeppink", "lightpink", "blue", "snow3", "chocolate2", "lemonchiffon", "coral2", "cadetblue", "maroon4", "thistle1")) +
+  theme(legend.position="bottom", axis.text.x=element_blank(),#panel.border = element_blank(), 
+       panel.spacing.x = unit(0,"line"), 
+       axis.ticks.x=element_blank()) +  
+      guides(fill=guide_legend(nrow=5)) + 
+      facet_grid(~sample_Species, scales="free", space="fixed") 
+
+data$Phylum <- factor(data$Phylum, levels=
+                    c("Proteobacteria", "Firmicutes", " Actinobacteriota",
+                       "Spirochaetota", "Chloroflexi","Campilobacterota", "Other"))
+
+###CURRENT ONE
+# The palette with black:
+cbbPalette <- c( "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7","#000000", "#999999")
+
+FGlab <- c("Generalist", "Insectivorous", "Nectarivore", "Granivore")
+ggplot(data, aes(x = sample_Species, y = Abundance, fill = Phylum)) +
+  geom_bar(stat = 'identity', position = 'fill') +
+  facet_grid(~Foraging.Guild, scale = 'free', space = 'free_x') +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_discrete(guide = guide_axis(angle = -90)) +
+  xlab(NULL)+
+  labs(y = 'Relative abundance (%)') +
+  guides(fill = guide_legend(ncol = 1, bycol = TRUE)) +
+  scale_fill_manual(values=cbbPalette) + # Colorblind friendly
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 15, margin = margin(t = 7)),
+        axis.title.y = element_text(size = 13, margin = margin(r = 2)),
+        axis.text.y  = element_text(size = 11, color= 'black'),
+        axis.text.x  = element_text(size = 11, color= 'black', angle = 90),
+         strip.text.x = element_text(size = 11, color = 'black'),
+        strip.background = element_blank()) +
+  theme(panel.border = element_rect(color = 'grey29'),
+        panel.grid.minor = element_blank(), panel.grid.major = element_blank()) +
+  theme(legend.title = element_text(size = 12),
+        legend.key.size = unit(0.5, 'cm'),
+        legend.text  = element_text(size = 12))
+ data2 <- data %>%
+  mutate(Foraging.Guild = recode(Foraging.Guild,
+    "Nectar" = "Nectarivore",
+    "Seed-eater" = "Granivore",
+    "Insectivorous" = "Insectivore",
+    "Generalist" = "Generalist"
+  ))
+
+axis.text.x=element_text(color = "black", size=11, angle=90
+phy = psmelt(ps.clean.rel)
+taxa_summary = aggregate(phy$Abundance, by = list(Category = phy$Phylum), FUN = sum) # calculate sum of abundance for each phyla
+taxa_summary = taxa_summary[order(-taxa_summary$x),]
+taxa_summary
+
+# Reduce number of categories by combining rare OTUs
+table(phy$Phylum, useNA ='ifany') # table of phyla
+phy$Phylum[phy$Phylum == ''] = 'NA' # change if there are empty names to NA
+table(phy$Phylum, useNA = 'ifany') # check
+list(as.character(taxa_summary[-c(1:6), 1]))
+#
+library('plyr')  
+phy$Phylum <- revalue(phy$Phylum, 
+                    c("Chloroflexi" = "Other",
+                      "Bacteroidota" = "Other",
+                      "Myxococcota" = "Other",
+                      "Planctomycetota" = "Other",
+                      "Campilobacterota" = "Other",
+                      "Cyanobacteria" = "Other",
+                     "Bdellovibrionota" = "Other",
+                      "WPS-2" = "Other",
+                      "Verrucomicrobiota" = "Other",
+                      "Deinococcota" = "Other",
+                      "Patescibacteria" = "Other",
+                      "Armatimonadota" = "Other",
+                      "Gemmatimonadota" = "Other",
+                      "Fusobacteriota" ="Other",
+                      "Methylomirabilota" = "Other",
+                      "RCP2-54" = "Other",
+                      "Desulfobacterota"= "Other",
+                      " Dependentiae"   = "Other",
+                     " Rs-K70_termite_group"  = "Other",
+                     " Elusimicrobiota"   ="Other",
+                     " Nitrospirota" = "Other",
+                     " NB1-j"  = "Other",
+                    " Fibrobacterota"= "Other",
+                    " MBNT15" ="Other",
+                    " Sva0485" = "Other",
+                    " Sumerlaeota" = "Other",
+                    " FCPU426" = "Other",
+                    " Latescibacterota" = "Other",
+                    " Abditibacteriota" = "Other",
+                    " Entotheonellaeota"  = "Other",
+                    " GAL15" = "Other",
+                    " Deferribacterota" = "Other",
+                    " WS4" = "Other",
+                    " SAR324_clade(Marine_group_B)" = "Other",
+                    " PAUC34f"= "Other",
+                    " Margulisbacteria" = "Other",
+                    "NA" = "Other"))  
+table(phy$Phylum, useNA = 'ifany')
+table(is.na(phy$Phylum))
+
+phy$Phylum = factor(phy$Phylum, levels = c('Proteobacteria', 'Firmicutes',
+                                           'Actinobacteriota', 'Bacteroidota',
+                                           'Acidobacteriota', 'Spirochaetota',
+                                           'Myxococcota', 'Cyanobacteria',
+                                           'Campilobacterota', 'Verrucomicrobiota',
+                                           'Other'))
+
+ggplot(phy, aes(x = sample_Species, y = Abundance, fill = Phylum)) +
+  geom_bar(stat = 'identity', position = 'fill') +
+  facet_grid(~Foraging.Guild, scale = 'free', space = 'free_x') +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_discrete(guide = guide_axis(angle = -90)) +
+  labs(x = 'Infection status', y = 'Relative abundance (%)') +
+  guides(fill = guide_legend(ncol = 1, bycol = TRUE)) +
+  scale_fill_viridis_d() + # Colorblind friendly
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 20, margin = margin(t = 7)),
+        axis.title.y = element_text(size = 20, margin = margin(r = 2)),
+        axis.text.y  = element_text(size = 17, color= 'black'),
+        axis.text.x  = element_text(size = 17, color= 'black'),
+        strip.text.x = element_text(size = 17, color = 'black'),
+        strip.background = element_blank()) +
+  theme(panel.border = element_rect(color = 'grey29'),
+        panel.grid.minor = element_blank(), panel.grid.major = element_blank()) +
+  theme(legend.title = element_text(size = 18),
+        legend.key.size = unit(0.75, 'cm'),
+        legend.text  = element_text(size = 18))
+
+###insect plot
+ggplot(data, aes(x = Sample, y = Abundance, fill = Phylum)) +
+  geom_bar(stat = 'identity', position = 'fill') +
+  facet_grid(~sample_Species, scale = 'free', space = 'free_x') +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_discrete(guide = guide_axis(angle = -90)) +
+  xlab(NULL)+
+  labs(y = 'Relative abundance (%)') +
+  guides(fill = guide_legend(ncol = 1, bycol = TRUE)) +
+  scale_fill_manual(values=cbbPalette) + # Colorblind friendly
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 15, margin = margin(t = 7)),
+        axis.title.y = element_text(size = 13, margin = margin(r = 2)),
+        axis.text.y  = element_text(size = 11, color= 'black'),
+        axis.text.x  = element_blank(),
+         strip.text.x = element_text(size = 11, color = 'black'),
+        strip.background = element_blank()) +
+  theme(panel.border = element_rect(color = 'grey29'),
+        panel.grid.minor = element_blank(), panel.grid.major = element_blank()) +
+  theme(legend.title = element_text(size = 12),
+        legend.key.size = unit(0.5, 'cm'),
+        legend.text  = element_text(size = 12))
+
+```
+
