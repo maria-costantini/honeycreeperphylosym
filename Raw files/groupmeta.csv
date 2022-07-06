@@ -1,0 +1,20 @@
+﻿sample-id,Island,Abbreviation,Foraging Guild
+Puaiohi ,Kauai,PUAI,Frugivore
+Palila,Big Island,PALI,Seed-eater
+Oahu amakihi,Oahu,OAAM,Generalist 
+Kiwiku ,Maui,KIWI,Insectivorous 
+Maui alauahio,Maui,MAAL,Insectivorous 
+Kauai elepaio ,Kauai,KAEL,Insectivorous 
+Kauai amakihi,Kauai,KAAM,Generalist 
+Warbling white-eye,All,JAWE,Generalist 
+Iiwi,"Kauai, Maui, BI",IIWI,Nectar 
+House finch,Big Island,HOFI,Seed-eater
+Alawi,Big Island,HCRE,Insectivorous 
+Hawaii Amakihi,"Maui, BI",HAAM,Generalist 
+Apapane,"Kauai, Maui, BI",APAP,Nectar 
+Anianiau,Kauai,ANIA,Generalist 
+Akikiki,Kauai,AKIK,Insectivorous 
+Akiapolaau,Big Island,AKIA,Insectivorous 
+Akepa,Big Island,AKEP,Insectivorous 
+Akekee,Kauai,AKEK,Insectivorous 
+Control,Additional,,

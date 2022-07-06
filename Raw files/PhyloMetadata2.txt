@@ -1,0 +1,393 @@
+sample-id	Island	Abbreviation	Species	Band-Number	Date Collected	Location	Solution	Foraging Guild	Notes	Sample_or_Control
+1801-98024-16S	Kauai	PUAI	Puaiohi 	1801-98024	4/15/18		Ethanol	Frugivore	UH freezer	Sample
+2301-10757-16S	Kauai	PUAI	Puaiohi 	2301-10757	2/24/18		Ethanol	Frugivore	UH freezer	Sample
+1841-12200-16S	Big Island	PALI	Palila	1841-12200	5/13/20	BOWL	Ethanol	Seed-eater		Sample
+1841-12202-16S	Big Island	PALI	Palila	1841-12202	5/21/20	BOWL	Ethanol	Seed-eater		Sample
+1841-12219-16S	Big Island	PALI	Palila	1841-12219	6/30/20	GUZ	Ethanol	Seed-eater		Sample
+1841-12218-16S	Big Island	PALI	Palila	1841-12218	6/30/20	GUZZ	Ethanol	Seed-eater		Sample
+1841-12203-16S	Big Island	PALI	Palila	1841-12203	5/29/20	GUZZ	Ethanol	Seed-eater		Sample
+1841-12195-16S	Big Island	PALI	Palila	1841-12195	5/7/20	BOWL	Ethanol	Seed-eater		Sample
+1841-12204-16S	Big Island	PALI	Palila	1841-12204	6/3/20	GUZZ	Ethanol	Seed-eater		Sample
+1841-12208-16S	Big Island	PALI	Palila	1841-12208	6/3/20	GUZZ	Ethanol	Seed-eater		Sample
+1841-12220-16S	Big Island	PALI	Palila	1841-12220	6/30/20	GUZZ	Ethanol	Seed-eater		Sample
+2781-72520-16S	Oahu	OAAM	Oahu amakihi	2781-72520	7/15/20	WAAH	Ethanol	Generalist 		Sample
+2781-72518-16S	Oahu	OAAM	Oahu amakihi	2781-72518	7/13/20	WAAH	Ethanol	Generalist 		Sample
+2781-72519-16S	Oahu	OAAM	Oahu amakihi	2781-72519	7/15/20	WAAH	Ethanol	Generalist 		Sample
+2781-72521-16S	Oahu	OAAM	Oahu amakihi	2781-72521	7/15/20	WAAH	Ethanol	Generalist 		Sample
+2791-97723-16S	Oahu	OAAM	Oahu amakihi	2791-97723	6/23/20	Makiki	Ethanol	Generalist 		Sample
+WILD10-16S	Maui	MAPA	Kiwiku 	WILD10	10/26/19		Ethanol	Insectivorous 		Sample
+WILD8-16S	Maui	MAPA	Kiwiku 	WILD8	10/26/19		Ethanol	Insectivorous 		Sample
+WILD11-16S	Maui	MAPA	Kiwiku 	WILD11	10/26/19		Ethanol	Insectivorous 		Sample
+WILD07-16S	Maui	MAPA	Kiwiku 	WILD07	10/26/19	WILD	Ethanol	Insectivorous 		Sample
+WILD01-16S	Maui	MAPA	Kiwiku 	WILD01	10/29/20	WILD	Ethanol	Insectivorous 		Sample
+1821-67576-16S	Maui	MAAL	Maui alauahio	1821-67576	6/9/20	FSB	Ethanol	Insectivorous 		Sample
+1821-67581-16S	Maui	MAAL	Maui alauahio	1821-67581	6/7/20	FSB	Ethanol	Insectivorous 		Sample
+2631-36281-16S	Maui	MAAL	Maui alauahio	2631-36281	6/5/20	FSB	Ethanol	Insectivorous 		Sample
+2591-56433-16S	Maui	MAAL	Maui alauahio	2591-56433	6/21/20	HR2	Ethanol	Insectivorous 		Sample
+2591-56432-16S	Maui	MAAL	Maui alauahio	2591-56432	6/21/20	HR2	Ethanol	Insectivorous 		Sample
+1821-67480-16S	Maui	MAAL	Maui alauahio	1821-67480	6/6/19	PALIKU	Ethanol	Insectivorous 		Sample
+1821-67468-16S	Maui	MAAL	Maui alauahio	1821-67468	6/6/19	PALIKU	Ethanol	Insectivorous 		Sample
+1821-67472-16S	Maui	MAAL	Maui alauahio	1821-67472	6/6/19	PALIKU	Ethanol	Insectivorous 		Sample
+2591-08243-16S	Maui	MAAL	Maui alauahio	2591-08243	11/11/19	CHAR037	Alcohol	Insectivorous 		Sample
+2350-24067-16S	Maui	MAAL	Maui alauahio	2350-24067	12/8/19	WEST079	Alcohol	Insectivorous 		Sample
+2591-08235-16S	Maui	MAAL	Maui alauahio	2591-08235	11/9/19	CHAR028	Alcohol	Insectivorous 		Sample
+2591-08251-16S	Maui	MAAL	Maui alauahio	2591-08251	11/25/19	PKEA019	Alcohol	Insectivorous 		Sample
+2631-36273-16S	Maui	MAAL	Maui alauahio	2631-36273	6/7/20	FSB	Ethanol	Insectivorous 		Sample
+2591-56420-16S	Maui	MAAL	Maui alauahio	2591-56420	6/6/20	FSB	Ethanol	Insectivorous 		Sample
+2631-36274-16S	Maui	MAAL	Maui alauahio	2631-36274	6/7/20	FSB	Ethanol	Insectivorous 		Sample
+2631-36268-16S	Maui	MAAL	Maui alauahio	2631-36268	6/7/20	FSB	Ethanol	Insectivorous 		Sample
+2631-36266-16S	Maui	MAAL	Maui alauahio	2631-36266	6/8/20	FSB	Ethanol	Insectivorous 		Sample
+2631-36275-16S	Maui	MAAL	Maui alauahio	2631-36275	6/6/20	FSB	Ethanol	Insectivorous 		Sample
+2631-36277-16S	Maui	MAAL	Maui alauahio	2631-36277	6/6/20	FSB	Ethanol	Insectivorous 		Sample
+2591-08625-16S	Maui	MAAL	Maui alauahio	2591-08625	12/5/19	WEST028	Alcohol	Insectivorous 		Sample
+2280-09294-16S	Kauai	KAEL	Kauai elepaio 	2280-09294	4/29/17		Ethanol	Insectivorous 	UH freezer	Sample
+2631-36134-16S	Kauai	KAEL	Kauai elepaio 	2631-36134	4/1/18		Ethanol	Insectivorous 	UH freezer	Sample
+1821-20628-16S	Kauai	KAEL	Kauai elepaio 	1821-20628	1/31/17		Ethanol	Insectivorous 	UH freezer	Sample
+1821-20764-16S	Kauai	KAEL	Kauai elepaio 	1821-20764	1/30/17		Ethanol	Insectivorous 	UH freezer-KF	Sample
+1821-21342-16S	Kauai	KAEL	Kauai elepaio 	1821-21342	7/8/17		Ethanol	Insectivorous 	UH freezer-KF	Sample
+2520-89366-16S	Kauai	KAEL	Kauai elepaio 	2520-89366	2/6/18		Ethanol	Insectivorous 	UH freezer-KF	Sample
+2520-89393-16S	Kauai	KAEL	Kauai elepaio 	2520-89393	6/3/19		Ethanol	Insectivorous 	UH freezer-KF	Sample
+2631-36159-16S	Kauai	KAEL	Kauai elepaio 	2631-36159	6/3/19		Ethanol	Insectivorous 	UH freezer-KF	Sample
+1861-01131-16S	Kauai	KAAM	Kauai amakihi	1861-01131	6/6/17	UUK	Ethanol 	Generalist 		Sample
+1821-21350-16S	Kauai	KAAM	Kauai amakihi	1821-21350	1/29/17	HPK	Ethanol 	Generalist 		Sample
+1821-21426-16S	Kauai	KAAM	Kauai amakihi	1821-21426	10/10/19	MOH	Ethanol 	Generalist 		Sample
+BU-XX-OR-OR-16S	Kauai	KAAM	Kauai amakihi	BU/XX;OR/OR	1/8/17	PHT	Alcohol 	Generalist 		Sample
+1821-20782-16S	Kauai	KAAM	Kauai amakihi	1821-20782	1/16/17	KWK	Alcohol 	Generalist 		Sample
+2631-36104-012018-16S	Kauai	KAAM	Kauai amakihi	2631-36104	1/20/18	HPK	Ethanol	Generalist 		Sample
+1821-20777-16S	Kauai	KAAM	Kauai amakihi	1821-20777	11/16/16	KWK	Alcohol	Generalist 		Sample
+1821-21346-16S	Kauai	KAAM	Kauai amakihi	1821-21346	1/27/17	HPK	Ethanol	Generalist 		Sample
+1821-21359-16S	Kauai	KAAM	Kauai amakihi	1821-21359	3/24/17	HPK	Alcohol	Generalist 		Sample
+1821-20779-16S	Kauai	KAAM	Kauai amakihi	1821-20779	1/16/17	KWK	Alcohol	Generalist 		Sample
+BK-WH-AL-GN-16S	Kauai	KAAM	Kauai amakihi	"BK/WH,AL/GN"	1/8/17	KWK	Alcohol	Generalist 		Sample
+1821-20790-16S	Kauai	KAAM	Kauai amakihi	1821-20790	12/10/17	HPK	Ethanol	Generalist 		Sample
+1861-01132-16S	Kauai	KAAM	Kauai amakihi	1861-01132	6/6/17		Ethanol	Generalist 	UH freezer	Sample
+2631-36105-16S	Kauai	KAAM	Kauai amakihi	2631-36105	1/20/18		Ethanol	Generalist 	UH freezer	Sample
+1821-21393-16S	Kauai	KAAM	Kauai amakihi	1821-21393	7/9/17		Ethanol	Generalist 	UH freezer	Sample
+2631-36104-040118-16S	Kauai	KAAM	Kauai amakihi	2631-36104	4/1/18		Ethanol	Generalist 	UH freezer	Sample
+1861-01497-16S	Kauai	KAAM	Kauai amakihi	1861-01497	5/31/17		Ethanol	Generalist 	UH freezer	Sample
+2280-37754-16S	Kauai	JAWE	Warbling white-eye	2280-37754	2/23/19	HPK	Ethanol 	Generalist 		Sample
+2280-37785-16S	Kauai	JAWE	Warbling white-eye	2280-37785	2/23/19	HPK	Ethanol 	Generalist 		Sample
+2280-37668-16S	Kauai	JAWE	Warbling white-eye	2280-37668	3/5/18	MOH	Ethanol 	Generalist 		Sample
+1871-25565-16S	Kauai	JAWE	Warbling white-eye	1871-25565	11/8/16	MOH	Ethanol 	Generalist 		Sample
+2280-09226-16S	Kauai	JAWE	Warbling white-eye	2280-09226	5/15/18	HPK	Ethanol 	Generalist 		Sample
+2520-89331-16S	Kauai	JAWE	Warbling white-eye	2520-89331	2/1/17	HPK	Ethanol 	Generalist 		Sample
+2520-89528-16S	Kauai	JAWE	Warbling white-eye	2520-89528	10/10/19	MOH	Ethanol 	Generalist 		Sample
+2280-37778-16S	Kauai	JAWE	Warbling white-eye	2280-37778	5/14/18	HPK	Ethanol	Generalist 		Sample
+2280-37620-16S	Kauai	JAWE	Warbling white-eye	2280-37620	11/6/16	KWK	Alcohol 	Generalist 		Sample
+2280-37725-16S	Kauai	JAWE	Warbling white-eye	2280-37725	12/12/17	HPK	Ethanol	Generalist 		Sample
+2280-37784-16S	Kauai	JAWE	Warbling white-eye	2280-37784	2/23/19	HPK	Ethanol	Generalist 		Sample
+2850-26837-16S	Oahu	JAWE	Warbling white-eye	2850-26837	7/7/20	Makiki	Ethanol	Generalist 		Sample
+2850-26841-16S	Oahu	JAWE	Warbling white-eye	2850-26841	6/23/20	Makiki	Ethanol	Generalist 		Sample
+2850-26843-16S	Oahu	JAWE	Warbling white-eye	2850-26843	6/25/20	Makiki	Ethanol	Generalist 		Sample
+JAWE-NoBand-16S	Oahu	JAWE	Warbling white-eye	No band	6/23/20	Makiki	Ethanol	Generalist 		Sample
+2850-26845-16S	Oahu	JAWE	Warbling white-eye	2850-26845	7/8/20	Makiki	Ethanol	Generalist 		Sample
+2850-26846-16S	Oahu	JAWE	Warbling white-eye	2850-26846	7/7/20	Makiki	Ethanol	Generalist 		Sample
+2280-09093-16S	Maui	JAWE	Warbling white-eye	2280-09093	6/5/20	FSB	Ethanol	Generalist 		Sample
+2280-09047-16S	Maui	JAWE	Warbling white-eye	2280-09047	6/12/19	KKOA	Ethanol	Generalist 		Sample
+2610-29524-16S	Maui	JAWE	Warbling white-eye	2610-29524	5/11/19	NAK	Ethanol	Generalist 		Sample
+2280-09024-16S	Maui	JAWE	Warbling white-eye	2280-09024	6/6/19	PALIKU	Ethanol	Generalist 		Sample
+2610-29583-16S	Maui	JAWE	Warbling white-eye	2610-29583	5/11/19	NAK	Ethanol	Generalist 		Sample
+2610-29520-16S	Maui	JAWE	Warbling white-eye	2610-29520	5/11/19	NAK	Ethanol	Generalist 		Sample
+2280-37744-16S	Kauai	JAWE	Warbling white-eye	2280-37744	2/11/18		Ethanol	Generalist 	UH freezer	Sample
+2280-37752-16S	Kauai	JAWE	Warbling white-eye	2280-37752	2/16/18		Ethanol	Generalist 	UH freezer	Sample
+2280-37742-16S	Kauai	JAWE	Warbling white-eye	2280-37742	2/7/18		Ethanol	Generalist 	UH freezer	Sample
+2280-09296-16S	Kauai	JAWE	Warbling white-eye	2280-09296	7/9/17		Ethanol	Generalist 	UH freezer	Sample
+2520-89512-16S	Kauai	JAWE	Warbling white-eye	2520-89512	3/12/18		Ethanol	Generalist 	UH freezer-KF	Sample
+2280-09275-16S	Kauai	JAWE	Warbling white-eye	2280-09275	5/15/18		Ethanol	Generalist 	UH freezer-KF	Sample
+2430-73363-16S	Maui	JAWE	Warbling white-eye	2430-73363	6/5/20	FSB	Ethanol	Generalist 		Sample
+2850-26842-16S	Maui	JAWE	Warbling white-eye	2850-26842	6/25/20	Maki	Ethanol	Generalist 		Sample
+2280-37867-16S	Big Island	JAWE	Warbling white-eye	2280-37867	6/29/20	BOG	Ethanol	Generalist 		Sample
+2280-37869-16S	Big Island	JAWE	Warbling white-eye	2280-37869	6/30/20	GUZZ	Ethanol	Generalist 		Sample
+2360-82778-16S	Big Island	JAWE	Warbling white-eye	2360-82778	3/13/20	AIRA	Alcohol	Generalist 		Sample
+2700-54645-16S	Big Island	JAWE	Warbling white-eye	2700-54645	7/8/20	PWWA	Alcohol	Generalist 		Sample
+2280-08994-16S	Big Island	JAWE	Warbling white-eye	2280-08994	11/6/19	KIPA	Alcohol	Generalist 		Sample
+2360-82731-16S	Big Island	JAWE	Warbling white-eye	2360-82731	2/5/20	NANZ	Alcohol	Generalist 		Sample
+2280-08965-16S	Big Island	JAWE	Warbling white-eye	2280-08965	10/17/19	KULA	Ethanol	Generalist 		Sample
+2280-09058-16S	Big Island	JAWE	Warbling white-eye	2280-09058	6/12/19	KKOA	Alcohol	Generalist 		Sample
+2430-73296-16S	Big Island	JAWE	Warbling white-eye	2430-73296	6/12/19	KKOA	Alcohol	Generalist 		Sample
+2280-37899-16S	Big Island	JAWE	Warbling white-eye	2280-37899	6/9/20	GUZZ	Ethanol	Generalist 		Sample
+2280-37861-16S	Big Island	JAWE	Warbling white-eye	2280-37861	5/29/20	GUZZ	Ethanol	Generalist 		Sample
+2351-24074-16S	Big Island	JAWE	Warbling white-eye	2351-24074	4/17/20	UPKE	Alcohol	Generalist 		Sample
+1861-01487-16S	Kauai	IIWI	Iiwi	1861-01487	1/24/18	HPK	Ethanol 	Nectar 		Sample
+1821-01491-16S	Kauai	IIWI	Iiwi	1821-01491	12/8/17	HPK	Ethanol 	Nectar 		Sample
+1861-01296-013117-16S	Kauai	IIWI	Iiwi	1861-01296	1/31/17	HPK	Alcohol 	Nectar 		Sample
+1871-25566-16S	Kauai	IIWI	Iiwi	1871-25566	1/16/17	KWK	Ethanol	Nectar 		Sample
+2441-93918-16S	Maui	IIWI	Iiwi	2441-93918	6/20/20	HR2	Ethanol	Nectar 		Sample
+2441-94079-16S	Maui	IIWI	Iiwi	2441-94079	6/6/19	PALIKU	Ethanol	Nectar 		Sample
+2821-59859-16S	Maui	IIWI	Iiwi	2821-59859	11/11/19	CHAR	Alcohol	Nectar 		Sample
+IIWI-3-16S	Maui	IIWI	Iiwi	-3	12/8/19	WEST077	Alcohol	Nectar 		Sample
+2821-57897-16S	Maui	IIWI	Iiwi	2821-57897	12/8/19	WEST	Alcohol	Nectar 		Sample
+2821-57856-16S	Maui	IIWI	Iiwi	2821-57856	11/8/19	CHAR016	Alcohol	Nectar 		Sample
+2821-57899-16S	Maui	IIWI	Iiwi	2821-57899	12/8/19	WEST	Alcohol	Nectar 		Sample
+2441-93911-16S	Maui	IIWI	Iiwi	2441-93911	6/6/20	FSB	Ethanol	Nectar 		Sample
+1861-01296-013017-16S	Kauai	IIWI	Iiwi	1861-01296	1/30/17	HPK	Ethanol	Nectar 	UH freezer	Sample
+1871-25580-16S	Kauai	IIWI	Iiwi	1871-25580	2/19/19	HPK	Ethanol	Nectar 	UH freezer-KF	Sample
+2711-81141-16S	Big Island	IIWI	Iiwi	2711-81141	6/17/20	MAUL	Alcohol	Nectar 		Sample
+2711-81009-16S	Big Island	IIWI	Iiwi	2711-81009	1/17/20	PUAK	Alcohol	Nectar 		Sample
+2691-20897-16S	Big Island	IIWI	Iiwi	2691-20897	2/28/16	KOAR	Alcohol	Nectar 		Sample
+2711-81139-16S	Big Island	IIWI	Iiwi	2711-81139	6/17/20	MAUL	Alcohol	Nectar 		Sample
+2661-06676-16S	Big Island	IIWI	Iiwi	2661-06676	3/26/16	PUAK	Alcohol	Nectar 		Sample
+2711-81113-16S	Big Island	IIWI	Iiwi	2711-81113	6/16/20	MAUL	Alcohol	Nectar 		Sample
+2711-81126-16S	Big Island	IIWI	Iiwi	2711-81126	6/17/20	MAUL	Alcohol	Nectar 		Sample
+2591-08284-16S	Big Island	IIWI	Iiwi	2591-08284	1/14/20	PUAK	Alcohol	Nectar 		Sample
+2711-72633-16S	Big Island	IIWI	Iiwi	2711-72633	3/1/16	PUAK	Alcohol	Nectar 		Sample
+2711-72719-16S	Big Island	IIWI	Iiwi	2711-72719	4/1/16	PEDR	Alcohol	Nectar 		Sample
+2711-72767-16S	Big Island	IIWI	Iiwi	2711-72767	4/26/16	KOAR	Alcohol	Nectar 		Sample
+2711-72804-16S	Big Island	IIWI	Iiwi	2711-72804	5/10/16	PUAK	Alcohol	Nectar 		Sample
+1711-72698-032616-16S	Big Island	IIWI	Iiwi	1711-72698	3/26/16	PUAK	Alcohol	Nectar 		Sample
+2691-20725-16S	Big Island	IIWI	Iiwi	2691-20725	4/19/16	PEDR	Alcohol	Nectar 		Sample
+2711-72696-16S	Big Island	IIWI	Iiwi	2711-72696	3/24/16	PEDR	Alcohol	Nectar 		Sample
+2711-72821-16S	Big Island	IIWI	Iiwi	2711-72821	5/10/16	PUAK	Alcohol	Nectar 		Sample
+2711-72695-16S	Big Island	IIWI	Iiwi	2711-72695	3/24/16	PEDR	Alcohol	Nectar 		Sample
+2691-20878-16S	Big Island	IIWI	Iiwi	2691-20878	5/19/16	PUAK	Alcohol	Nectar 		Sample
+2711-72760-16S	Big Island	IIWI	Iiwi	2711-72760	4/25/16	PUAK	Alcohol	Nectar 		Sample
+1931-02151-16S	Big Island	IIWI	Iiwi	1931-02151	3/15/16	PUAK	Alcohol	Nectar 		Sample
+2711-72708-16S	Big Island	IIWI	Iiwi	2711-72708	3/29/20	KOAR	Alcohol	Nectar 		Sample
+2711-72606-16S	Big Island	IIWI	Iiwi	2711-72606	2/28/16	KOAR	Alcohol	Nectar 		Sample
+1711-72698-052216-16S	Big Island	IIWI	Iiwi	1711-72698	5/22/16	PUAK	Alcohol	Nectar 		Sample
+1861-01662-16S	Big Island	IIWI	Iiwi	1861-01662	10/17/19	KULA	Ethanol	Nectar 		Sample
+2711-81137-16S	Big Island	IIWI	Iiwi	2711-81137	6/17/20	MALU	Alcohol	Nectar 		Sample
+2711-81133-16S	Big Island	IIWI	Iiwi	2711-81133	6/17/20	MAUL	Alcohol	Nectar 		Sample
+2711-81138-16S	Big Island	IIWI	Iiwi	2711-81138	6/17/20	MAUL	Alcohol	Nectar 		Sample
+2851-57862-16S	Big Island	IIWI	Iiwi	2851-57862	1/25/20	PKEA	Alcohol	Nectar 		Sample
+1881-73772-16S	Big Island	HOFI	House finch	1881-73772	6/25/20	MANU	Ethanol	Seed-eater		Sample
+2771-14410-16S	Big Island	HOFI	House finch	2771-14410	6/26/19	MANU	Alcohol	Seed-eater		Sample
+1881-73630-16S	Big Island	HOFI	House finch	1881-73630	4/28/20	BIPA	Alcohol	Seed-eater		Sample
+1881-73698-16S	Big Island	HOFI	House finch	1881-73698	5/5/20	KIOL	Alcohol	Seed-eater		Sample
+1881-73623-16S	Big Island	HOFI	House finch	1881-73623	3/12/20	AIRA	Alcohol	Seed-eater		Sample
+2781-68697-16S	Big Island	HOFI	House finch	2781-68697	6/9/20	GUZZ	Ethanol	Seed-eater		Sample
+2781-68658-16S	Big Island	HOFI	House finch	2781-68658	5/29/20	GUZZ	Ethanol	Seed-eater		Sample
+1601-34261-16S	Big Island	HOFI	House finch	1601-34261	6/9/20	GUZZ	Ethanol	Seed-eater		Sample
+1601-34228-16S	Big Island	HOFI	House finch	1601-34228	5/31/20	BOWL	Ethanol	Seed-eater		Sample
+1601-34254-16S	Big Island	HOFI	House finch	1601-34254	6/9/20	GUZZ	Ethanol	Seed-eater		Sample
+1691-49199-16S	Big Island	HCRE	Alawi	1691-49199	1/28/20	PUAK	Alcohol	Insectivorous 		Sample
+2591-08286-011620-16S	Big Island	HCRE	Alawi	2591-08286	1/16/20	PUAK	Alcohol	Insectivorous 		Sample
+2631-11687-102419-16S	Big Island	HCRE	Alawi	2631-11687	10/24/19	HWOU	Alcohol	Insectivorous 		Sample
+2591-26695-16S	Big Island	HCRE	Alawi	2591-26695	5/26/15	PEDR	Alcohol	Insectivorous 		Sample
+2591-26789-16S	Big Island	HCRE	Alawi	2591-26789	1/16/20	PUAK	Alcohol	Insectivorous 		Sample
+1851-54934-16S	Big Island	HCRE	Alawi	1851-54934	2/25/16	KOAR	Alcohol	Insectivorous 		Sample
+2631-11845-16S	Big Island	HCRE	Alawi	2631-11845	3/26/16	PUAK	Alcohol	Insectivorous 		Sample
+1831-93065-16S	Big Island	HCRE	Alawi	1831-93065	3/23/16	KOAR	Alcohol	Insectivorous 		Sample
+2631-11780-16S	Big Island	HCRE	Alawi	2631-11780	3/29/16	KOAR	Alcohol	Insectivorous 		Sample
+1661-42921-16S	Big Island	HCRE	Alawi	1661-42921	1/28/20	PUAK	Alcohol	Insectivorous 		Sample
+2631-11687-031016-16S	Big Island	HCRE	Alawi	2631-11687	3/10/16	PUAK	Alcohol	Insectivorous 		Sample
+2020-40784-16S	Big Island	HCRE	Alawi	2020-40784	10/7/15	PUAK	Alcohol	Insectivorous 		Sample
+2591-08303-16S	Big Island	HCRE	Alawi	2591-08303	10/24/19	HWOW	Alcohol	Insectivorous 		Sample
+1831-47881-16S	Big Island	HCRE	Alawi	1831-47881	2/28/16	KOAR	Alcohol	Insectivorous 		Sample
+1661-42996-16S	Big Island	HCRE	Alawi	1661-42996	5/8/16	KOAR	Alcohol	Insectivorous 		Sample
+2631-11782-16S	Big Island	HCRE	Alawi	2631-11782	3/14/16	KOAR	Alcohol	Insectivorous 		Sample
+2591-08286-011420-16S	Big Island	HCRE	Alawi	2591-08286	1/14/20	PUAK	Alcohol	Insectivorous 		Sample
+1661-42969-16S	Big Island	HCRE	Alawi	1661-42969	9/4/15	PEDR	Alcohol	Insectivorous 		Sample
+2591-08281-16S	Big Island	HCRE	Alawi	2591-08281	1/14/20	PUAK	Alcohol	Insectivorous 		Sample
+2631-11708-16S	Big Island	HCRE	Alawi	2631-11708	4/19/16	PEDR	Alcohol	Insectivorous 		Sample
+1661-42970-16S	Big Island	HCRE	Alawi	1661-42970	4/19/16	PEDR	Alcohol	Insectivorous 		Sample
+2350-24351-16S	Big Island	HCRE	Alawi	2350-24351	3/14/15	KOAR	Alcohol	Insectivorous 		Sample
+1821-67578-16S	Maui	HAAM	Hawaii Amakihi	1821-67578	6/8/20	FSB	Ethanol	Generalist 		Sample
+2631-36279-16S	Maui	HAAM	Hawaii Amakihi	2631-36279	6/9/20	FSB	Ethanol	Generalist 		Sample
+2591-56422-16S	Maui	HAAM	Hawaii Amakihi	2591-56422	6/8/20	FSB	Ethanol	Generalist 		Sample
+1821-67488-16S	Maui	HAAM	Hawaii Amakihi	1821-67488	6/12/19	KKOA	Ethanol	Generalist 		Sample
+2591-56400-16S	Maui	HAAM	Hawaii Amakihi	2591-56400	5/12/19	NAK	Ethanol	Generalist 		Sample
+2631-37374-16S	Maui	HAAM	Hawaii Amakihi	2631-37374	5/12/19	NAK	Ethanol	Generalist 		Sample
+2631-37373-16S	Maui	HAAM	Hawaii Amakihi	2631-37373	5/12/19	NAK	Ethanol	Generalist 		Sample
+2631-37365-16S	Maui	HAAM	Hawaii Amakihi	2631-37365	5/11/19	NAK	Ethanol	Generalist 		Sample
+2631-37362-16S	Maui	HAAM	Hawaii Amakihi	2631-37362	5/11/19	NAK	Ethanol	Generalist 		Sample
+1821-67475-16S	Maui	HAAM	Hawaii Amakihi	1821-67475	6/6/19	Paliku	Ethanol	Generalist 		Sample
+1821-67457-16S	Maui	HAAM	Hawaii Amakihi	1821-67457	6/6/19	PALIKU	Ethanol	Generalist 		Sample
+1821-67460-16S	Maui	HAAM	Hawaii Amakihi	1821-67460	6/6/19	PALIKU	Ethanol	Generalist 		Sample
+1821-67479-16S	Maui	HAAM	Hawaii Amakihi	1821-67479	6/6/19	PALIKU	Ethanol	Generalist 		Sample
+1821-67465-16S	Maui	HAAM	Hawaii Amakihi	1821-67465	6/6/19	PALIKU	Ethanol	Generalist 		Sample
+1821-67473-16S	Maui	HAAM	Hawaii Amakihi	1821-67473	6/6/19	PALIKU	Ethanol	Generalist 		Sample
+1821-67459-16S	Maui	HAAM	Hawaii Amakihi	1821-67459	6/6/19	PALIKU	Ethanol	Generalist 		Sample
+2631-36262-16S	Maui	HAAM	Hawaii Amakihi	2631-36262	6/9/20	FSB	Ethanol	Generalist 		Sample
+2631-36278-16S	Maui	HAAM	Hawaii Amakihi	2631-36278	6/6/20	FSB	Ethanol	Generalist 		Sample
+2591-56426-16S	Maui	HAAM	Hawaii Amakihi	2591-56426	6/9/20	FSB	Ethanol	Generalist 		Sample
+2631-37375-16S	Maui	HAAM	Hawaii Amakihi	2631-37375	5/12/19	NAK	Ethanol	Generalist 		Sample
+1821-67452-16S	Maui	HAAM	Hawaii Amakihi	1821-67452	6/6/19	PALIKU	Ethanol	Generalist 		Sample
+2781-68700-16S	Big Island	HAAM	Hawaii Amakihi	2781-68700	6/23/20	BOWL	Ethanol	Generalist 		Sample
+1601-34274-16S	Big Island	HAAM	Hawaii Amakihi	1601-34274	6/23/20	BOWL	Ethanol	Generalist 		Sample
+1601-34271-16S	Big Island	HAAM	Hawaii Amakihi	1601-34271	6/23/20	BOWL	Ethanol	Generalist 		Sample
+1601-34270-16S	Big Island	HAAM	Hawaii Amakihi	1601-34270	6/23/20	BOWL	Ethanol	Generalist 		Sample
+2781-68624-16S	Big Island	HAAM	Hawaii Amakihi	2781-68624	5/7/20	BOWL	Ethanol	Generalist 		Sample
+1601-34302-16S	Big Island	HAAM	Hawaii Amakihi	1601-34302	6/30/20	GUZZ	Ethanol	Generalist 		Sample
+2781-68665-16S	Big Island	HAAM	Hawaii Amakihi	2781-68665	5/29/20	GUZZ	Ethanol	Generalist 		Sample
+1601-34314-16S	Big Island	HAAM	Hawaii Amakihi	1601-34314	6/30/20	GUZZ	Ethanol	Generalist 		Sample
+1490-89708-16S	Big Island	HAAM	Hawaii Amakihi	1490-89708	5/7/20	KIOL	Alcohol	Generalist 		Sample
+2591-08508-16S	Big Island	HAAM	Hawaii Amakihi	2591-08508	7/9/20	PWWA	Alcohol	Generalist 		Sample
+2721-53274-16S	Big Island	HAAM	Hawaii Amakihi	2721-53274	2/7/20	MARC	Alcohol	Generalist 		Sample
+1881-73714-16S	Big Island	HAAM	Hawaii Amakihi	1881-73714	6/9/20	KONA	Alcohol	Generalist 		Sample
+1921-78664-16S	Big Island	HAAM	Hawaii Amakihi	1921-78664	4/15/20	UPKE	Alcohol	Generalist 		Sample
+1881-73786-16S	Big Island	HAAM	Hawaii Amakihi	1881-73786	6/7/20	PWWA	Alcohol	Generalist 		Sample
+2711-81023-16S	Big Island	HAAM	Hawaii Amakihi	2711-81023	2/3/20	NANI	Alcohol	Generalist 		Sample
+1881-73708-16S	Big Island	HAAM	Hawaii Amakihi	1881-73708	6/5/20	KAUF	Alcohol	Generalist 		Sample
+1490-89710-16S	Big Island	HAAM	Hawaii Amakihi	1490-89710	5/8/20	KIOL	Alcohol	Generalist 		Sample
+1881-73644-16S	Big Island	HAAM	Hawaii Amakihi	1881-73644	3/19/20	MAUL	Alcohol	Generalist 		Sample
+1881-73647-16S	Big Island	HAAM	Hawaii Amakihi	1881-73647	3/19/20	MANU	Alcohol	Generalist 		Sample
+2711-81025-16S	Big Island	HAAM	Hawaii Amakihi	2711-81025	2/4/20	MANU	Alcohol	Generalist 		Sample
+1881-73517-16S	Big Island	HAAM	Hawaii Amakihi	1881-73517	2/26/20	PFBS	Alcohol	Generalist 		Sample
+1881-73578-16S	Big Island	HAAM	Hawaii Amakihi	1881-73578	2/27/20	PFBS	Alcohol	Generalist 		Sample
+1881-73614-16S	Big Island	HAAM	Hawaii Amakihi	1881-73614	3/13/20	AIRA	Alcohol	Generalist 		Sample
+1490-89715-16S	Big Island	HAAM	Hawaii Amakihi	1490-89715	5/14/20	KAHU	Alcohol	Generalist 		Sample
+1601-34276-16S	Big Island	HAAM	Hawaii Amakihi	1601-34276	6/23/20	BOWL	Ethanol	Generalist 		Sample
+1881-73624-16S	Big Island	HAAM	Hawaii Amakihi	1881-73624	3/12/20	AIRA	Alcohol	Generalist 		Sample
+2591-08204-16S	Big Island	HAAM	Hawaii Amakihi	2591-08204	7/23/19	BIOX	Alcohol	Generalist 		Sample
+1881-73656-16S	Big Island	HAAM	Hawaii Amakihi	1881-73656	4/15/20	UPKE	Alcohol	Generalist 		Sample
+2591-08414-16S	Big Island	HAAM	Hawaii Amakihi	2591-08414	2/5/20	NANZ	Alcohol	Generalist 		Sample
+2631-36124-16S	Kauai	APAP	Apapane	2631-36124	2/24/18	HPK	Ethanol 	Nectar 		Sample
+1861-01140-16S	Kauai	APAP	Apapane	1861-01140	10/10/19	MOH	Ethanol 	Nectar 		Sample
+1821-21340-16S	Kauai	APAP	Apapane	1821-21340	7/10/16	HPK	Alcohol 	Nectar 		Sample
+2631-36250-16S	Maui	APAP	Apapane	2631-36250	6/21/20	Classic	Ethanol	Nectar 		Sample
+2631-36258-16S	Maui	APAP	Apapane	2631-36258	6/20/20	Classic	Ethanol	Nectar 		Sample
+2631-36259-16S	Maui	APAP	Apapane	2631-36259	6/20/20	Classic	Ethanol	Nectar 		Sample
+2591-56427-16S	Maui	APAP	Apapane	2591-56427	6/9/20	FSB	Ethanol	Nectar 		Sample
+2591-56430-16S	Maui	APAP	Apapane	2591-56430	6/20/20	HR2	Ethanol	Nectar 		Sample
+2631-37367-16S	Maui	APAP	Apapane	2631-37367	5/11/19	NAK	Ethanol	Nectar 		Sample
+2631-37371-16S	Maui	APAP	Apapane	2631-37371	5/12/19	NAK	Ethanol	Nectar 		Sample
+2631-37372-16S	Maui	APAP	Apapane	2631-37372	5/12/19	NAK	Ethanol	Nectar 		Sample
+2821-57874-16S	Maui	APAP	Apapane	2821-57874	12/5/19	WEST029	Alcohol	Nectar 		Sample
+2591-08264-16S	Maui	APAP	Apapane	2591-08264	12/5/19	WEST	Alcohol	Nectar 		Sample
+2821-57854-16S	Maui	APAP	Apapane	2821-57854	11/7/19	CHAR005	Alcohol	Nectar 		Sample
+2591-08250-16S	Maui	APAP	Apapane	2591-08250	11/25/19	PKEA016	Alcohol	Nectar 		Sample
+2591-08246-16S	Maui	APAP	Apapane	2591-08246	12/5/19	WEST030	Alcohol	Nectar 		Sample
+2631-36271-16S	Maui	APAP	Apapane	2631-36271	6/7/20	FSB	Ethanol	Nectar 		Sample
+2631-36272-16S	Maui	APAP	Apapane	2631-36272	6/7/20	FSB	Ethanol	Nectar 		Sample
+2631-36269-16S	Maui	APAP	Apapane	2631-36269	6/7/20	FSB	Ethanol	Nectar 		Sample
+2591-56438-16S	Maui	APAP	Apapane	2591-56438	6/21/20	HR2	Ethanol	Nectar 		Sample
+1861-01486-16S	Kauai	APAP	Apapane	1861-01486	2/12/18		Ethanol	Nectar 	UH freezer	Sample
+1871-25574-16S	Kauai	APAP	Apapane	1871-25574	1/26/18		Ethanol	Nectar 	UH freezer	Sample
+2631-36129-16S	Kauai	APAP	Apapane	2631-36129	3/30/18		Ethanol	Nectar 	UH freezer	Sample
+1861-01494-16S	Kauai	APAP	Apapane	1861-01494	6/3/17		Ethanol	Nectar 	UH freezer-KF	Sample
+1861-01496-16S	Kauai	APAP	Apapane	1861-01496	5/31/17		Ethanol	Nectar 	UH freezer-KF	Sample
+1871-25575-16S	Kauai	APAP	Apapane	1871-25575	2/16/18		Ethanol	Nectar 	UH freezer-KF	Sample
+2591-08300-16S	Big Island	APAP	Apapane	2591-08300	1/28/20	PUAK	Alcohol	Nectar 		Sample
+2020-40648-16S	Big Island	APAP	Apapane	2020-40648	3/2/13	PEDR	Alcohol	Nectar 		Sample
+1881-73676-16S	Big Island	APAP	Apapane	1881-73676	4/24/20	BYLE	Alcohol	Nectar 		Sample
+1881-73720-16S	Big Island	APAP	Apapane	1881-73720	6/9/20	KONA	Alcohol	Nectar 		Sample
+1881-73687-16S	Big Island	APAP	Apapane	1881-73687	4/28/20	KIPA	Alcohol	Nectar 		Sample
+2721-50720-16S	Big Island	APAP	Apapane	2721-50720	11/5/19	KIPA	Alcohol	Nectar 		Sample
+2721-50726-16S	Big Island	APAP	Apapane	2721-50726	11/6/19	KIPA	Alcohol	Nectar 		Sample
+2721-50742-16S	Big Island	APAP	Apapane	2721-50742	11/6/19	KIPA	Alcohol	Nectar 		Sample
+2591-08294-16S	Big Island	APAP	Apapane	2591-08294	1/17/20	PUAK	Alcohol	Nectar 		Sample
+1881-73673-16S	Big Island	APAP	Apapane	1881-73673	4/22/20	KIVO	Alcohol	Nectar 		Sample
+2631-11813-16S	Big Island	APAP	Apapane	2631-11813	3/19/16	PUAK	Alcohol	Nectar 		Sample
+2631-11719-16S	Big Island	APAP	Apapane	2631-11719	2/15/16	KOAR	Alcohol	Nectar 		Sample
+1661-42928-16S	Big Island	APAP	Apapane	1661-42928	4/26/16	KOAR	Alcohol	Nectar 		Sample
+2631-11709-16S	Big Island	APAP	Apapane	2631-11709	2/14/16	PEDR	Alcohol	Nectar 		Sample
+2721-50774-16S	Big Island	APAP	Apapane	2721-50774	11/7/19	KIPA	Alcohol	Nectar 		Sample
+2721-50749-16S	Big Island	APAP	Apapane	2721-50749	11/6/19	KIPA	Alcohol	Nectar 		Sample
+2631-11710-16S	Big Island	APAP	Apapane	2631-11710	2/14/16	PEDR	Alcohol	Nectar 		Sample
+2621-19454-16S	Big Island	APAP	Apapane	2621-19454	2/25/16	KOAR	Alcohol	Nectar 		Sample
+2631-11959-16S	Big Island	APAP	Apapane	2631-11959	4/26/16	KOAR	Alcohol	Nectar 		Sample
+2631-11736-16S	Big Island	APAP	Apapane	2631-11736	2/24/16	PEDR	Alcohol	Nectar 		Sample
+2721-12120-16S	Big Island	APAP	Apapane	2721-12120	5/20/16	PUAK	Alcohol	Nectar 		Sample
+1831-93061-16S	Big Island	APAP	Apapane	1831-93061	3/14/15	KOAR	Alcohol	Nectar 		Sample
+2631-11920-16S	Big Island	APAP	Apapane	2631-11920	4/22/16	PUAK	Alcohol	Nectar 		Sample
+2621-19484-16S	Big Island	APAP	Apapane	2621-19484	5/12/14	KOAR	Alcohol	Nectar 		Sample
+2771-14774-16S	Big Island	APAP	Apapane	2771-14774	6/29/20	KONA	Alcohol	Nectar 		Sample
+1881-73672-16S	Big Island	APAP	Apapane	1881-73672	4/21/20	KIVO	Alcohol	Nectar 		Sample
+2280-37669-16S	Kauai	ANIA	Anianiau	2280-37669	3/12/18	UUK	Ethanol 	Generalist 		Sample
+2280-37710-16S	Kauai	ANIA	Anianiau	2280-37710	4/8/17	HPK	Ethanol 	Generalist 		Sample
+2280-37731-121217-16S	Kauai	ANIA	Anianiau	2280-37731	12/12/17	HPK	Ethanol 	Generalist 		Sample
+2520-89382-16S	Kauai	ANIA	Anianiau	2520-89382	2/2/19	HPK	Ethanol 	Generalist 		Sample
+2520-89360-16S	Kauai	ANIA	Anianiau	2520-89360	1/21/18	HPK	Ethanol 	Generalist 		Sample
+2280-37740-16S	Kauai	ANIA	Anianiau	2280-37740	2/6/18	HPK	Ethanol 	Generalist 		Sample
+2280-37717-16S	Kauai	ANIA	Anianiau	2280-37717	5/31/17	HPK	Ethanol 	Generalist 		Sample
+2520-89415-16S	Kauai	ANIA	Anianiau	2520-89415	12/16/17	HPK	Ethanol 	Generalist 		Sample
+2280-37657-16S	Kauai	ANIA	Anianiau	2280-37657	10/12/19	MOH	Ethanol 	Generalist 		Sample
+2280-37685-16S	Kauai	ANIA	Anianiau	2280-37685	10/10/19	MOH	Ethanol 	Generalist 		Sample
+2280-37699-16S	Kauai	ANIA	Anianiau	2280-37699	10/12/19	MOH	Ethanol 	Generalist 		Sample
+2280-09288-16S	Kauai	ANIA	Anianiau	2280-09288	7/13/16	HPK	Alcohol 	Generalist 		Sample
+2520-89383-16S	Kauai	ANIA	Anianiau	2520-89383	2/24/18	HPK	Ethanol	Generalist 		Sample
+1821-21384-16S	Kauai	ANIA	Anianiau	1821-21384	6/3/17	HPK	Ethanol	Generalist 		Sample
+2520-89358-16S	Kauai	ANIA	Anianiau	2520-89358	5/31/17	HPK	Ethanol	Generalist 		Sample
+2280-09271-16S	Kauai	ANIA	Anianiau	2280-09271	12/8/15	MOH	Alcohol	Generalist 		Sample
+2520-84342-16S	Kauai	ANIA	Anianiau	2520-84342	1/30/17	HPK	Alcohol	Generalist 		Sample
+2280-27728-16S	Kauai	ANIA	Anianiau	2280-27728	12/10/17	HPK	Ethanol	Generalist 		Sample
+2520-89339-16S	Kauai	ANIA	Anianiau	2520-89339	1/31/17	HPK	Ethanol	Generalist 		Sample
+1821-21385-16S	Kauai	ANIA	Anianiau	1821-21385	6/3/17	HPK	Ethanol	Generalist 		Sample
+2280-09268-16S	Kauai	ANIA	Anianiau	2280-09268	12/7/15	MOH	Alcohol	Generalist 		Sample
+2280-09228-16S	Kauai	ANIA	Anianiau	2280-09228	7/3/17		Ethanol	Generalist 	UH freezer	Sample
+2520-89368-16S	Kauai	ANIA	Anianiau	2520-89368	2/7/18		Ethanol	Generalist 	UH freezer	Sample
+2280-37739-16S	Kauai	ANIA	Anianiau	2280-37739	2/2/18		Ethanol	Generalist 	UH freezer	Sample
+2520-89365-16S	Kauai	ANIA	Anianiau	2520-89365	1/25/18		Ethanol	Generalist 	UH freezer	Sample
+2520-89361-16S	Kauai	ANIA	Anianiau	2520-89361	1/21/18		Ethanol	Generalist 	UH freezer-KF	Sample
+2280-37731-022319-16S	Kauai	ANIA	Anianiau	2280-37731	2/23/19		Ethanol	Generalist 	UH freezer-KF	Sample
+2280-37656-16S	Kauai	ANIA	Anianiau	2280-37656	2/24/18		Ethanol	Generalist 	UH freezer-KF	Sample
+2520-89380-16S	Kauai	ANIA	Anianiau	2520-89380	2/19/19		Ethanol	Generalist 	UH freezer-KF	Sample
+2280-37788-16S	Kauai	AKIK	Akikiki	2280-37788	2/23/19	HPK	Ethanol 	Insectivorous 		Sample
+1821-20712-16S	Kauai	AKIK	Akikiki	1821-20712	12/12/17	HPK	Ethanol 	Insectivorous 		Sample
+1821-21373-16S	Kauai	AKIK	Akikiki	1821-21373	4/13/17	HPK	Ethanol 	Insectivorous 		Sample
+1821-21371-16S	Kauai	AKIK	Akikiki	1821-21371	4/11/17	HPK	Ethanol 	Insectivorous 		Sample
+2631-36106-16S	Kauai	AKIK	Akikiki	2631-36106	1/20/18	HPK	Ethanol 	Insectivorous 		Sample
+2280-37786-16S	Kauai	AKIK	Akikiki	2280-37786	2/23/19	HPK	Ethanol 	Insectivorous 		Sample
+2631-36111-16S	Kauai	AKIK	Akikiki	2631-36111	1/25/18	HPK	Ethanol 	Insectivorous 		Sample
+1821-21422-16S	Kauai	AKIK	Akikiki	1821-21422	5/19/19	HPK	Ethanol 	Insectivorous 		Sample
+1821-21403-16S	Kauai	AKIK	Akikiki	1821-21403	2/24/18	UUK	Ethanol 	Insectivorous 		Sample
+2631-36158-16S	Kauai	AKIK	Akikiki	2631-36158	6/3/19	HPK	Ethanol 	Insectivorous 		Sample
+1821-21381-16S	Kauai	AKIK	Akikiki	1821-21381	4/25/17	HPK	Alcohol 	Insectivorous 		Sample
+1821-20694-16S	Kauai	AKIK	Akikiki	1821-20694	3/20/17	HPK	Alcohol 	Insectivorous 		Sample
+1821-20775-16S	Kauai	AKIK	Akikiki	1821-20775	11/5/16	MOH	Ethanol	Insectivorous 		Sample
+1821-20774-16S	Kauai	AKIK	Akikiki	1821-20774	11/5/16	MOH	Alcohol	Insectivorous 		Sample
+1821-21326-16S	Kauai	AKIK	Akikiki	1821-21326	5/5/17	MOH	Alcohol	Insectivorous 		Sample
+1821-21368-16S	Kauai	AKIK	Akikiki	1821-21368	4/9/17	HPK	Ethanol	Insectivorous 		Sample
+1821-21407-16S	Kauai	AKIK	Akikiki	1821-21407	2/27/18	UUK	Ethanol	Insectivorous 		Sample
+2631-36142-16S	Kauai	AKIK	Akikiki	2631-36142	5/7/18	HPK	Ethanol	Insectivorous 		Sample
+1821-21415-16S	Kauai	AKIK	Akikiki	1821-21415	3/26/18	UUK	Ethanol	Insectivorous 		Sample
+1821-21360-16S	Kauai	AKIK	Akikiki	1821-21360	3/25/17	HPK	Ethanol	Insectivorous 		Sample
+1841-12149-16S	Big Island	AKIA	Akiapolaau	1841-12149	7/1/20	BOG	Ethanol	Insectivorous 		Sample
+1801-16165-041613-16S	Big Island	AKIA	Akiapolaau	1801-16165	4/16/13	PUAK	Alcohol	Insectivorous 		Sample
+2641-48231-16S	Big Island	AKIA	Akiapolaau	2641-48231	1/28/20	PUAK	Alcohol	Insectivorous 		Sample
+1801-16186-16S	Big Island	AKIA	Akiapolaau	1801-16186	12/14/13	NAUHI	Alcohol	Insectivorous 		Sample
+881-81194-072012-16S	Big Island	AKIA	Akiapolaau	881-81194	7/20/12	PEDR	Alcohol	Insectivorous 		Sample
+2641-96137-16S	Big Island	AKIA	Akiapolaau	2641-96137	4/22/15	PEDR	Alcohol	Insectivorous 		Sample
+2641-96133-16S	Big Island	AKIA	Akiapolaau	2641-96133	3/30/15	KOAR	Alcohol	Insectivorous 		Sample
+1801-16165-041513-16S	Big Island	AKIA	Akiapolaau	1801-16165	4/15/13	PUAK	Alcohol	Insectivorous 		Sample
+1801-16166-16S	Big Island	AKIA	Akiapolaau	1801-16166	4/15/13	PUAK	Alcohol	Insectivorous 		Sample
+2641-96159-16S	Big Island	AKIA	Akiapolaau	2641-96159	2/15/16	KOAR	Alcohol	Insectivorous 		Sample
+2641-96164-16S	Big Island	AKIA	Akiapolaau	2641-96164	3/19/16	PUAK	Alcohol	Insectivorous 		Sample
+2641-96161-16S	Big Island	AKIA	Akiapolaau	2641-96161	2/17/17	PUAK	Alcohol	Insectivorous 		Sample
+1801-16168-16S	Big Island	AKIA	Akiapolaau	1801-16168	9/27/13	PUAK	Alcohol	Insectivorous 		Sample
+2641-96105-16S	Big Island	AKIA	Akiapolaau	2641-96105	4/21/14	PEDR	Alcohol	Insectivorous 		Sample
+1801-16163-16S	Big Island	AKIA	Akiapolaau	1801-16163	5/18/14	PUAK	Alcohol	Insectivorous 		Sample
+881-81198-16S	Big Island	AKIA	Akiapolaau	881-81198	3/2/13	PEDR	Alcohol	Insectivorous 		Sample
+881-81194-070215-16S	Big Island	AKIA	Akiapolaau	881-81194	7/2/15	PEDR	Alcohol	Insectivorous 		Sample
+2690-92209-16S	Big Island	AKEP	Akepa	2690-92209	5/21/15	PUAK	Alcohol	Insectivorous 		Sample
+2690-92228-16S	Big Island	AKEP	Akepa	2690-92228	3/2/13	PEDR	Alcohol	Insectivorous 		Sample
+2730-22273-16S	Big Island	AKEP	Akepa	2730-22273	5/23/15	PEDR	Alcohol	Insectivorous 		Sample
+2400-68090-052515-16S	Big Island	AKEP	Akepa	2400-68090	5/25/15	PUAK	Alcohol	Insectivorous 		Sample
+2730-22105-16S	Big Island	AKEP	Akepa	2730-22105	5/11/14	PUAK	Alcohol	Insectivorous 		Sample
+2730-22318-16S	Big Island	AKEP	Akepa	2730-22318	5/10/16	PUAK	Alcohol	Insectivorous 		Sample
+2690-92252-16S	Big Island	AKEP	Akepa	2690-92252	3/24/16	PEDR	Alcohol	Insectivorous 		Sample
+2390-93144-16S	Big Island	AKEP	Akepa	2390-93144	3/15/16	PUAK	Alcohol	Insectivorous 		Sample
+2390-93189-16S	Big Island	AKEP	Akepa	2390-93189	4/24/16	PUAK	Alcohol	Insectivorous 		Sample
+1851-54906-16S	Big Island	AKEP	Akepa	1851-54906	3/25/15	PUAK	Alcohol	Insectivorous 		Sample
+2690-92220-060320-16S	Big Island	AKEP	Akepa	2690-92220	6/3/20	PUAK	Alcohol	Insectivorous 		Sample
+2390-93111-16S	Big Island	AKEP	Akepa	2390-93111	2/10/16	PUAK	Alcohol	Insectivorous 		Sample
+2730-22226-16S	Big Island	AKEP	Akepa	2730-22226	5/18/16	PEDR	Alcohol	Insectivorous 		Sample
+2710-42577-16S	Big Island	AKEP	Akepa	2710-42577	2/24/15	PEDR	Alcohol	Insectivorous 		Sample
+2730-22320-16S	Big Island	AKEP	Akepa	2730-22320	5/16/16	PUAK	Alcohol	Insectivorous 		Sample
+2390-93300-16S	Big Island	AKEP	Akepa	2390-93300	10/1/15	PUAK	Alcohol	Insectivorous 		Sample
+2400-68090-042216-16S	Big Island	AKEP	Akepa	2400-68090	4/22/16	PUAK	Alcohol	Insectivorous 		Sample
+2730-22236-16S	Big Island	AKEP	Akepa	2730-22236	3/26/16	PUAK	Alcohol	Insectivorous 		Sample
+2690-92220-022615-16S	Big Island	AKEP	Akepa	2690-92220	2/26/15	PUAK	Alcohol	Insectivorous 		Sample
+2390-93256-16S	Big Island	AKEP	Akepa	2390-93256	3/16/16	PEDR	Alcohol	Insectivorous 		Sample
+2631-36118-16S	Kauai	AKEK	Akekee	2631-36118	2/7/18	HPK	Ethanol 	Insectivorous 		Sample
+2280-37793-16S	Kauai	AKEK	Akekee	2280-37793	5/31/19	HPK	Ethanol 	Insectivorous 		Sample
+2280-37683-16S	Kauai	AKEK	Akekee	2280-37683	7/5/19	HPK	Ethanol 	Insectivorous 		Sample
+2280-37760-16S	Kauai	AKEK	Akekee	2280-37760	4/7/18	HPK	Ethanol 	Insectivorous 		Sample
+1821-21380-16S	Kauai	AKEK	Akekee	1821-21380	4/24/17	HPK	Alcohol	Insectivorous 		Sample
+1821-21379-16S	Kauai	AKEK	Akekee	1821-21379	4/24/17	HPK	Alcohol	Insectivorous 		Sample
+1821-20784-16S	Kauai	AKEK	Akekee	1821-20784	1/31/17	HPK	Alcohol	Insectivorous 		Sample
+2631-36140-16S	Kauai	AKEK	Akekee	2631-36140	4/20/18	HPK	Ethanol	Insectivorous 		Sample
+2280-37663-16S	Kauai	AKEK	Akekee	2280-37663	2/24/18		Ethanol	Insectivorous 	UH freezer	Sample
+Neg-092920-16S	Additional			Neg. control	9/29/20				Negative	Control
+16S-PCR-Neg1				PCR Neg 1					Negative	Control
+Neg-100520-16S	Additional			Neg. control	10/5/20				Negative	Control
+16S-PCR-Neg2				PCR Neg 2					Negative	Control
+Neg-101620-16S	Additional			Neg. control	10/16/20				Negative	Control
+Neg-102120-16S	Additional			Neg. control	10/21/20				Negative	Control
+16S-PCR-Neg3				PCR Neg 3					Negative	Control
+Neg-110420-16S	Additional			Neg. control	11/4/20				Negative	Control
+Neg-111720-16S	Additional			Neg. control	11/17/20				Negative	Control
+16S-PCR-Neg4				PCR Neg 4					Negative	Control
+Neg-111220-16S	Additional			Neg. control	11/12/20				Negative	Control
+16S-PCR-Neg5				PCR Neg 5					Negative	Control
